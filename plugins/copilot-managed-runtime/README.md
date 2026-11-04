@@ -177,9 +177,9 @@ Plugin and marketplace lists showed one new-identity registration and one enable
 `plugins/copilot-managed-runtime/skills`. Disable removed enabled plugin skills;
 enable restored all 22. Marketplace update succeeded; plugin update reported that
 the local source loads live, with nothing to copy. These checks do not prove a
-Git-backed update or runtime agent/hook loading. Git-backed installation is blocked:
-the new repository currently reports private visibility and no push permission for
-the publishing account; the public install commands below are not yet verified.
+Git-backed update or runtime agent/hook loading. Repository setup and publication
+access were subsequently completed. Git-backed installation needs separate
+verification using the public install commands below.
 
 Use the following commands in an empty disposable `COPILOT_HOME` with
 `COPILOT_AUTO_UPDATE=false`, from a disposable project:
