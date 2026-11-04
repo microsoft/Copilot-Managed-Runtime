@@ -28,8 +28,8 @@ This plugin works with GitHub Copilot CLI and Claude Code. Commands are the same
 Run `copilot` or `claude` in any folder, then:
 
 ```
-/plugin marketplace add microsoft/Managed-Apps
-/plugin install microsoft-managed-apps@Managed-Apps
+/plugin marketplace add microsoft/Copilot-Managed-Runtime
+/plugin install copilot-managed-runtime@Copilot-Managed-Runtime
 ```
 
 ---
@@ -123,5 +123,5 @@ See the [Telemetry section in the README](./README.md#telemetry) for details.
 ### Uninstall
 
 ```
-/plugin uninstall microsoft-managed-apps
+/plugin uninstall copilot-managed-runtime
 ```

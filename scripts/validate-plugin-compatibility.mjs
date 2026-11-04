@@ -4,7 +4,8 @@ import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const pluginPath = 'plugins/microsoft-managed-apps';
+const pluginPath = 'plugins/copilot-managed-runtime';
+const repository = 'https://github.com/microsoft/Copilot-Managed-Runtime';
 const schema = 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json';
 
 function isObject(value) {
@@ -132,13 +133,16 @@ export function validate(directory = root) {
   validateManifest(canonical);
   const { $schema, ...metadata } = canonical;
   assert.deepEqual(legacy, metadata, 'legacy plugin.json must match the canonical manifest except for $schema');
+  assert.equal(canonical.repository, repository, 'plugin must point at the CMR repository');
+  assert.equal(canonical.author?.url, repository, 'plugin author must point at the CMR repository');
 
   const marketplace = readJson(directory, '.claude-plugin/marketplace.json');
-  assert.equal(marketplace.name, 'Managed-Apps', 'preserve the existing marketplace identity');
+  assert.equal(marketplace.name, 'Copilot-Managed-Runtime', 'use the CMR marketplace identity');
+  assert.equal(marketplace.owner?.url, repository, 'marketplace owner must point at the CMR repository');
   assert.ok(Array.isArray(marketplace.plugins), 'legacy marketplace plugins must be an array');
   const entries = marketplace.plugins.filter(entry => entry?.name === canonical.name);
   assert.equal(entries.length, 1, 'legacy marketplace must contain exactly one matching plugin');
-  assert.equal(canonical.name, 'microsoft-managed-apps', 'preserve the existing plugin identity');
+  assert.equal(canonical.name, 'copilot-managed-runtime', 'use the CMR plugin identity');
   assert.equal(entries[0].source, `./${pluginPath}`, 'preserve the existing plugin source path');
   for (const key of ['version', 'description']) {
     assert.equal(typeof canonical[key], 'string', `this plugin must declare ${key}`);
@@ -151,6 +155,16 @@ export function validate(directory = root) {
   const codexEntries = codex.plugins.filter(entry => entry?.name === canonical.name);
   assert.equal(codexEntries.length, 1, 'Codex marketplace must contain exactly one matching plugin');
   assert.deepEqual(codexEntries[0].source, { source: 'local', path: `./${pluginPath}` }, 'Codex must use the same plugin directory');
+  const versionCheck = regularFile(resolve(directory, pluginPath), 'shared/version-check.md');
+  for (const target of [
+    'https://raw.githubusercontent.com/microsoft/Copilot-Managed-Runtime/main/.claude-plugin/marketplace.json',
+    '~/.copilot-managed-runtime-last-version-check',
+    "whose name is 'copilot-managed-runtime'",
+  ]) {
+    assert.ok(versionCheck.includes(target), `version check must use the CMR target: ${target}`);
+  }
+  assert.ok(!/Managed-Apps|microsoft-managed-apps/.test(versionCheck),
+    'version check must not use the original repository or plugin identity');
   validateComponents(directory);
 }
 

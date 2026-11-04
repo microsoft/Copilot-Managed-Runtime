@@ -44,7 +44,7 @@ def validate_skills(plugin: Path) -> list[str]:
 
 
 if __name__ == "__main__":
-    plugin = Path(__file__).resolve().parents[1] / "plugins" / "microsoft-managed-apps"
+    plugin = Path(__file__).resolve().parents[1] / "plugins" / "copilot-managed-runtime"
     errors = validate_skills(plugin)
     if errors:
         print("\n".join(errors), file=sys.stderr)

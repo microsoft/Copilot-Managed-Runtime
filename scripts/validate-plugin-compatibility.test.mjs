@@ -7,21 +7,21 @@ import test from 'node:test';
 import { validate } from './validate-plugin-compatibility.mjs';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const canonical = 'plugins/microsoft-managed-apps/plugin.json';
-const legacy = 'plugins/microsoft-managed-apps/.claude-plugin/plugin.json';
+const canonical = 'plugins/copilot-managed-runtime/plugin.json';
+const legacy = 'plugins/copilot-managed-runtime/.claude-plugin/plugin.json';
 const marketplace = '.claude-plugin/marketplace.json';
 const codex = '.agents/plugins/marketplace.json';
 
 function fixture(t) {
-  const directory = mkdtempSync(join(tmpdir(), 'managed-apps-compatibility-'));
+  const directory = mkdtempSync(join(tmpdir(), 'cmr-compatibility-'));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   for (const path of [canonical, legacy, marketplace, codex]) {
     mkdirSync(dirname(join(directory, path)), { recursive: true });
     copyFileSync(join(root, path), join(directory, path));
   }
   for (const path of ['agents', 'hooks', 'com.github.copilot', 'skills', 'shared']) {
-    cpSync(join(root, 'plugins/microsoft-managed-apps', path),
-      join(directory, 'plugins/microsoft-managed-apps', path), { recursive: true });
+    cpSync(join(root, 'plugins/copilot-managed-runtime', path),
+      join(directory, 'plugins/copilot-managed-runtime', path), { recursive: true });
   }
   return directory;
 }
@@ -58,6 +58,8 @@ for (const [name, path, change, message] of [
   ['invalid extensions', canonical, value => { value.extensions = { 'com.example': [] }; }, /extension values must be objects/],
   ['marketplace version drift', marketplace, value => { value.plugins[0].version = '0.0.0'; }, /marketplace version must match/],
   ['marketplace source drift', marketplace, value => { value.plugins[0].source = './wrong'; }, /source path/],
+  ['marketplace identity drift', marketplace, value => { value.name = 'Managed-Apps'; }, /CMR marketplace identity/],
+  ['marketplace owner drift', marketplace, value => { value.owner.url = 'https://github.com/microsoft/Managed-Apps'; }, /CMR repository/],
   ['missing marketplace entry', marketplace, value => { value.plugins = []; }, /exactly one matching plugin/],
   ['duplicate marketplace entry', marketplace, value => { value.plugins.push(value.plugins[0]); }, /exactly one matching plugin/],
   ['Codex source drift', codex, value => { value.plugins[0].source.path = './wrong'; }, /same plugin directory/],
@@ -110,13 +112,34 @@ for (const path of [canonical, legacy, marketplace, codex]) {
 
 test('rejects a missing Copilot agent', t => {
   const directory = fixture(t);
-  rmSync(join(directory, 'plugins/microsoft-managed-apps/com.github.copilot/agents/microsoft-apps-architect.agent.md'));
+  rmSync(join(directory, 'plugins/copilot-managed-runtime/com.github.copilot/agents/microsoft-apps-architect.agent.md'));
   assert.throws(() => validate(directory), /Copilot architect agent/);
 });
 
+test('rejects a different repository in both plugin manifests', t => {
+  const directory = fixture(t);
+  for (const path of [canonical, legacy]) {
+    edit(directory, path, value => { value.repository = 'https://github.com/microsoft/Managed-Apps'; });
+  }
+  assert.throws(() => validate(directory), /CMR repository/);
+});
+
+for (const target of [
+  'https://raw.githubusercontent.com/microsoft/Copilot-Managed-Runtime/main/.claude-plugin/marketplace.json',
+  '~/.copilot-managed-runtime-last-version-check',
+  "whose name is 'copilot-managed-runtime'",
+]) {
+  test(`rejects a stale version-check target: ${target}`, t => {
+    const directory = fixture(t);
+    const file = join(directory, 'plugins/copilot-managed-runtime/shared/version-check.md');
+    writeFileSync(file, readFileSync(file, 'utf8').replaceAll(target, 'stale-target'));
+    assert.throws(() => validate(directory), /CMR target/);
+  });
+}
+
 test('rejects Copilot agent drift', t => {
   const directory = fixture(t);
-  writeFileSync(join(directory, 'plugins/microsoft-managed-apps/com.github.copilot/agents/microsoft-apps-architect.agent.md'), 'changed');
+  writeFileSync(join(directory, 'plugins/copilot-managed-runtime/com.github.copilot/agents/microsoft-apps-architect.agent.md'), 'changed');
   assert.throws(() => validate(directory), /Copilot agent must match/);
 });
 
@@ -128,14 +151,14 @@ test('rejects Copilot hook drift', t => {
     value => { value.hooks.preToolUse[0].env = { COPILOT_CLI: '1' }; },
   ]) {
     const directory = fixture(t);
-    edit(directory, 'plugins/microsoft-managed-apps/com.github.copilot/hooks/hooks.json', change);
+    edit(directory, 'plugins/copilot-managed-runtime/com.github.copilot/hooks/hooks.json', change);
     assert.throws(() => validate(directory), /Copilot hooks must match/);
   }
 });
 
 test('rejects missing hook scripts', t => {
   const directory = fixture(t);
-  rmSync(join(directory, 'plugins/microsoft-managed-apps/hooks/pre-tool-use.ps1'));
+  rmSync(join(directory, 'plugins/copilot-managed-runtime/hooks/pre-tool-use.ps1'));
   assert.throws(() => validate(directory), /ENOENT/);
 });
 
@@ -146,7 +169,7 @@ for (const [name, content, message] of [
 ]) {
   test(`rejects ${name} in a skill`, t => {
     const directory = fixture(t);
-    writeFileSync(join(directory, 'plugins/microsoft-managed-apps/skills/create-app/SKILL.md'), content);
+    writeFileSync(join(directory, 'plugins/copilot-managed-runtime/skills/create-app/SKILL.md'), content);
     assert.throws(() => validate(directory), message);
   });
 }

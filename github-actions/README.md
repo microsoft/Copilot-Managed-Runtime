@@ -6,9 +6,9 @@ GitHub Actions for building and deploying apps on [Copilot Managed Runtime](http
 
 | Action | What it does | Ref |
 |---|---|---|
-| [`install-ms-cli`](./install-ms-cli) | Installs `@microsoft/cmr-cli` (binary: `ms`) on the runner. | `microsoft/Managed-Apps/github-actions/install-ms-cli@v1` |
-| [`ms-app-pack`](./ms-app-pack) | Runs `ms app pack` — builds and packs the app into a deployable artifact. | `microsoft/Managed-Apps/github-actions/ms-app-pack@v1` |
-| [`ms-app-deploy`](./ms-app-deploy) | Runs `ms app deploy` — uploads the artifact and deploys to the target environment. | `microsoft/Managed-Apps/github-actions/ms-app-deploy@v1` |
+| [`install-ms-cli`](./install-ms-cli) | Installs `@microsoft/cmr-cli` (binary: `ms`) on the runner. | `microsoft/Copilot-Managed-Runtime/github-actions/install-ms-cli@main` |
+| [`ms-app-pack`](./ms-app-pack) | Runs `ms app pack` — builds and packs the app into a deployable artifact. | `microsoft/Copilot-Managed-Runtime/github-actions/ms-app-pack@main` |
+| [`ms-app-deploy`](./ms-app-deploy) | Runs `ms app deploy` — uploads the artifact and deploys to the target environment. | `microsoft/Copilot-Managed-Runtime/github-actions/ms-app-deploy@main` |
 
 ## Quick start
 
@@ -32,14 +32,14 @@ jobs:
       with: { node-version: '24' }
     - run: npm install
       working-directory: apps/my-app
-    - uses: microsoft/Managed-Apps/github-actions/install-ms-cli@v1
-    - uses: microsoft/Managed-Apps/github-actions/ms-app-pack@v1
+    - uses: microsoft/Copilot-Managed-Runtime/github-actions/install-ms-cli@main
+    - uses: microsoft/Copilot-Managed-Runtime/github-actions/ms-app-pack@main
       with:
         working-directory: 'apps/my-app'
         app-id:        ${{ secrets.PP_SP_CLIENT_ID }}
         client-secret: ${{ secrets.PP_SP_CLIENT_SECRET }}
         tenant-id:     ${{ secrets.PP_SP_TENANT_ID }}
-    - uses: microsoft/Managed-Apps/github-actions/ms-app-deploy@v1
+    - uses: microsoft/Copilot-Managed-Runtime/github-actions/ms-app-deploy@main
       with:
         working-directory: 'apps/my-app'
         app-id:        ${{ secrets.PP_SP_CLIENT_ID }}
@@ -77,7 +77,9 @@ Each action's `action.yml` references the bundled `dist/actions/<name>/index.js`
 
 ## Versioning
 
-Actions follow the repository's release tags. Consumers can pin to:
+The initial publication uses `@main`; pin a commit SHA for reproducible workflows.
+Release tags from the original repository are not published in this new repository.
+After a release is published here, consumers can pin to:
 
 - `@v1` — major version, gets new features + non-breaking changes
 - `@v1.x.y` — specific immutable version, never moves

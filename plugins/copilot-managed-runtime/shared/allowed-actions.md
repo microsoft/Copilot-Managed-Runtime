@@ -310,7 +310,7 @@ connection was actually created, and removing it misrepresents the binding.
   `ms.config.json` today. A flag or command is a possible fast-follow; if a future CLI version
   exposes one, prefer it over hand-editing.
 - **Editor squiggles.** `ms.config.json` is validated against the published
-  [`ms.config.schema.json`](https://raw.githubusercontent.com/microsoft/Managed-Apps/main/schemas/ms.config.schema.json).
+  [`ms.config.schema.json`](https://raw.githubusercontent.com/microsoft/Copilot-Managed-Runtime/main/schemas/ms.config.schema.json).
   If the project pins an older `$schema` copy that predates this field, the editor may flag it
   even though the CLI accepts it — point the user at the current URL rather than dropping the
   field.

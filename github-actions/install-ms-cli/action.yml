@@ -8,12 +8,12 @@
 # Defaults to @microsoft/cmr-cli on the public npm registry. Standard usage
 # requires the renamed package to be published there:
 #
-#   - uses: microsoft/Managed-Apps/github-actions/install-ms-cli@v1
+#   - uses: microsoft/Copilot-Managed-Runtime/github-actions/install-ms-cli@main
 #
 # For preview/dev builds from the internal Azure DevOps feed, override the
 # registry inputs:
 #
-#   - uses: microsoft/Managed-Apps/github-actions/install-ms-cli@v1
+#   - uses: microsoft/Copilot-Managed-Runtime/github-actions/install-ms-cli@main
 #     with:
 #       version: '0.3.1-dev.20260511.4'
 #       registry-url: 'https://pkgs.dev.azure.com/<org>/<project>/_packaging/<feed>/npm/registry/'

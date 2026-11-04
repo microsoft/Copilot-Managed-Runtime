@@ -23,5 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# Managed-Apps specific
+# Copilot Managed Runtime specific
 .ms/packed/

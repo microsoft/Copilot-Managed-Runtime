@@ -93,7 +93,7 @@ export async function main(): Promise<void> {
     if (process.env[MsInstalledEnvVarName] !== 'true') {
         throw new Error(
             'ms CLI is not installed. Add the install-ms-cli action before ms-app-deploy:\n' +
-            '  - uses: microsoft/Managed-Apps/github-actions/install-ms-cli@v1'
+            '  - uses: microsoft/Copilot-Managed-Runtime/github-actions/install-ms-cli@main'
         );
     }
 

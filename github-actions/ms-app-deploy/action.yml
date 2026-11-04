@@ -49,8 +49,8 @@
 #   - run: npm run build
 #     working-directory: 'my-app'
 #   - run: cd my-app && zip -r ../app.zip dist ms.config.json
-#   - uses: microsoft/Managed-Apps/github-actions/install-ms-cli@v1
-#   - uses: microsoft/Managed-Apps/github-actions/ms-app-deploy@v1
+#   - uses: microsoft/Copilot-Managed-Runtime/github-actions/install-ms-cli@main
+#   - uses: microsoft/Copilot-Managed-Runtime/github-actions/ms-app-deploy@main
 #     with:
 #       working-directory: 'my-app'
 #       artifact-path: '../app.zip'
@@ -65,8 +65,8 @@
 #     with: { node-version: '22' }
 #   - run: npm ci
 #     working-directory: 'my-app'
-#   - uses: microsoft/Managed-Apps/github-actions/install-ms-cli@v1
-#   - uses: microsoft/Managed-Apps/github-actions/ms-app-deploy@v1
+#   - uses: microsoft/Copilot-Managed-Runtime/github-actions/install-ms-cli@main
+#   - uses: microsoft/Copilot-Managed-Runtime/github-actions/ms-app-deploy@main
 #     with:
 #       working-directory: 'my-app'
 #       app-id:        ${{ secrets.PP_SP_CLIENT_ID }}

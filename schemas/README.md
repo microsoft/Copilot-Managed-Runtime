@@ -12,8 +12,8 @@ validation without a generated copy checked into the project.
 Stable URLs:
 
 ```
-https://raw.githubusercontent.com/microsoft/Managed-Apps/main/schemas/ms.config.schema.json
-https://raw.githubusercontent.com/microsoft/Managed-Apps/main/schemas/stage-overlay.schema.json
+https://raw.githubusercontent.com/microsoft/Copilot-Managed-Runtime/main/schemas/ms.config.schema.json
+https://raw.githubusercontent.com/microsoft/Copilot-Managed-Runtime/main/schemas/stage-overlay.schema.json
 ```
 
 ## Do not hand-edit

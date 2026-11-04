@@ -1,11 +1,11 @@
 {
-  "name": "Managed-Apps",
+  "name": "Copilot-Managed-Runtime",
   "plugins": [
     {
-      "name": "microsoft-managed-apps",
+      "name": "copilot-managed-runtime",
       "source": {
         "source": "local",
-        "path": "./plugins/microsoft-managed-apps"
+        "path": "./plugins/copilot-managed-runtime"
       },
       "policy": {
         "installation": "AVAILABLE",

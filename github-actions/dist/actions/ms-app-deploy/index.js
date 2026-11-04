@@ -19850,7 +19850,7 @@ async function main() {
   if (clientSecret)
     core.setSecret(clientSecret);
   if (process.env[MsInstalledEnvVarName] !== "true") {
-    throw new Error("ms CLI is not installed. Add the install-ms-cli action before ms-app-deploy:\n  - uses: microsoft/Managed-Apps/github-actions/install-ms-cli@v1");
+    throw new Error("ms CLI is not installed. Add the install-ms-cli action before ms-app-deploy:\n  - uses: microsoft/Copilot-Managed-Runtime/github-actions/install-ms-cli@main");
   }
   await validateAppDirectory(workingDirectory);
   const msConfig = await readMsConfig(workingDirectory);

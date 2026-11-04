@@ -80,7 +80,7 @@ function App() {
           <p>The project and its packages</p>
           <ul>
             <li>
-              <a href="https://github.com/microsoft/Managed-Apps" target="_blank">
+              <a href="https://github.com/microsoft/Copilot-Managed-Runtime" target="_blank">
                 <svg
                   className="button-icon"
                   role="presentation"

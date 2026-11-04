@@ -6,7 +6,7 @@
 
 ### Step 1: Check if a version check is needed
 
-Look for the file `~/.microsoft-managed-apps-last-version-check`. Read it if it exists.
+Look for the file `~/.copilot-managed-runtime-last-version-check`. Read it if it exists.
 
 - If the file exists and contains today's date (YYYY-MM-DD format), **skip the entire check** and continue with the skill silently.
 - If the file does not exist, or the date is older than today, proceed to Step 2.
@@ -20,9 +20,9 @@ Resolve this path relative to this instruction file, not the user's project.
 
 Fetch the remote marketplace manifest:
 ```
-https://raw.githubusercontent.com/microsoft/Managed-Apps/main/.claude-plugin/marketplace.json
+https://raw.githubusercontent.com/microsoft/Copilot-Managed-Runtime/main/.claude-plugin/marketplace.json
 ```
-Use the `WebFetch` tool with the prompt: "Return only the version string for the plugin whose name is 'microsoft-managed-apps'."
+Use the `WebFetch` tool with the prompt: "Return only the version string for the plugin whose name is 'copilot-managed-runtime'."
 
 ### Step 4: Compare versions
 
@@ -35,7 +35,7 @@ Compare the local version against the remote version using semver rules — spli
 ```
 ╔══════════════════════════════════════════════════════════════╗
 ║  UPDATE AVAILABLE: v{local} → v{remote}                      ║
-║  Run your CLI's plugin update command for microsoft-managed-apps ║
+║  Run your CLI's plugin update command for copilot-managed-runtime ║
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
@@ -43,7 +43,7 @@ Compare the local version against the remote version using semver rules — spli
 
 ### Step 6: Update the timestamp
 
-Write today's date (YYYY-MM-DD) to `~/.microsoft-managed-apps-last-version-check` so subsequent skill runs today skip the check.
+Write today's date (YYYY-MM-DD) to `~/.copilot-managed-runtime-last-version-check` so subsequent skill runs today skip the check.
 
 ## Error Handling
 

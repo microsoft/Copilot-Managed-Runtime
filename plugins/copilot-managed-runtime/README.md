@@ -54,17 +54,17 @@ The `/create-app` skill handles the global install of `@microsoft/cmr-cli@latest
 
 2. Add the marketplace:
    ```
-   /plugin marketplace add microsoft/Managed-Apps
+   /plugin marketplace add microsoft/Copilot-Managed-Runtime
    ```
 
 3. Install the plugin:
    ```
-   /plugin install microsoft-managed-apps@Managed-Apps
+   /plugin install copilot-managed-runtime@Copilot-Managed-Runtime
    ```
 
 ### Agent Plugins and Codex discovery
 
-The canonical manifest is `plugins/microsoft-managed-apps/plugin.json`, relative to the repository root.
+The canonical manifest is `plugins/copilot-managed-runtime/plugin.json`, relative to the repository root.
 It declares the [Agent Plugins 1.0.0 schema](https://agent-plugins.org/specification).
 The published format uses root `plugin.json`, not `.plugin/plugin.json`.
 Compatible clients discover the existing `skills/` directory from this plugin root.
@@ -78,7 +78,7 @@ To evaluate a local checkout containing these changes:
 
 1. Add its repository root with `codex plugin marketplace add <checkout-path>`.
 2. Open the Plugins Directory in the ChatGPT desktop app with Codex plugin support.
-3. Select `Managed-Apps` and install `microsoft-managed-apps`, following the current Codex packaging guide.
+3. Select `Copilot-Managed-Runtime` and install `copilot-managed-runtime`, following the current Codex packaging guide.
 4. Start a new session before checking the installed skills.
 
 **Compatibility status:** the portable package does not establish full Codex runtime support.
@@ -103,13 +103,16 @@ Complete the client checks below before using workflows that change resources.
 | `hooks/*.sh` and `hooks/*.ps1` | Shared executable hooks. Both configurations run these same scripts. |
 
 Keep the Claude manifest. Claude still reads it even when a newer Copilot selects the root manifest.
-Neither marketplace nor plugin identity changes. All compatibility copies are regular files, not symlinks.
+This repository publishes marketplace `Copilot-Managed-Runtime` and plugin `copilot-managed-runtime`.
+It is a separate installation from the original repository, not an in-place upgrade of its plugin.
+All compatibility copies are regular files, not symlinks.
 
 **Intentional behavior change for review:** skills now inherit the model selected in the client.
 Version 2.1.4 requested Sonnet or Opus through Claude-specific `model` fields.
 The portable skill set removes those overrides instead of duplicating skill definitions.
 This can change response quality, speed, and cost for Claude users.
-The team must review this exception to issue #34's unchanged-behavior requirement.
+The original compatibility work recorded this exception to
+[microsoft/Managed-Apps#34](https://github.com/microsoft/Managed-Apps/issues/34)'s unchanged-behavior requirement.
 The removed `user-invocable: true` field matches Claude's default, so skills remain user-invocable.
 The workflow instructions and tool permissions remain, with portable resource links.
 
@@ -121,7 +124,8 @@ The recorded 2.1.4-to-2.1.5 results below cover the earlier 21-skill package.
 The legacy `.claude-plugin/plugin.json` is a regular JSON mirror of the canonical manifest, excluding only `$schema`.
 This preserves the legacy format while the canonical manifest declares the Agent Plugins version.
 Do not replace either file with a symlink.
-The existing `.claude-plugin/marketplace.json` installation path, marketplace identity, and plugin identity remain unchanged.
+The root `.claude-plugin/marketplace.json` registers only the new marketplace and plugin identities.
+Keep its source pointed at `./plugins/copilot-managed-runtime`; do not add aliases to the original repository.
 
 From the repository root, run:
 
@@ -157,6 +161,54 @@ Record the exact client version, OS, source revision, commands, observed compone
 Run install and upgrade checks in disposable client profiles, never an existing customer profile.
 Do not mark an unexecuted check as passed.
 
+For the new identity, fresh installation and discovery, updates, activation, agent and hook
+loading, shared resources, daily version checks, and representative workflows need new evidence.
+Claude Code and Codex runtime checks are pending. No cloud app has been created or deployed
+as part of the repository rename.
+
+**New-identity local evidence (2026-11-04):** Windows, Copilot CLI `1.0.103`,
+candidate plugin `2.1.11` based on source revision
+`76bbf184c475e2f774f46cd303cabd8282e9786e` plus this repository's identity changes.
+In an empty disposable `COPILOT_HOME` with `COPILOT_AUTO_UPDATE=false`, adding
+the candidate checkout as a local marketplace and installing
+`copilot-managed-runtime@Copilot-Managed-Runtime` reported `Installed 22 skills`.
+Plugin and marketplace lists showed one new-identity registration and one enabled
+`v2.1.11` plugin. Skill JSON contained exactly 22 enabled plugin skills under
+`plugins/copilot-managed-runtime/skills`. Disable removed enabled plugin skills;
+enable restored all 22. Marketplace update succeeded; plugin update reported that
+the local source loads live, with nothing to copy. These checks do not prove a
+Git-backed update or runtime agent/hook loading. Git-backed installation is blocked:
+the new repository currently reports private visibility and no push permission for
+the publishing account; the public install commands below are not yet verified.
+
+Use the following commands in an empty disposable `COPILOT_HOME` with
+`COPILOT_AUTO_UPDATE=false`, from a disposable project:
+
+```text
+copilot --version
+copilot plugin marketplace add microsoft/Copilot-Managed-Runtime
+copilot plugin install copilot-managed-runtime@Copilot-Managed-Runtime
+copilot plugin list
+copilot plugin marketplace list
+copilot skill list --json
+```
+
+For subsequent releases of this new identity, use:
+
+```text
+copilot plugin marketplace update Copilot-Managed-Runtime
+copilot plugin update copilot-managed-runtime@Copilot-Managed-Runtime
+```
+
+Do not use the historical commands below to install or update this repository's plugin.
+
+#### Historical baseline: original repository, not the CMR identity
+
+The following matrix and captured results describe `microsoft/Managed-Apps`,
+marketplace `Managed-Apps`, and plugin `microsoft-managed-apps` on 2026-10-26.
+They are retained as historical evidence only, not results for this repository's new identity.
+The 22-skill requirements were added after those 21-skill checks.
+
 | Client and scenario | Required result | Current evidence |
 | --- | --- | --- |
 | Claude Code, fresh install | 22 skills, architect, both hooks, resource links, daily version check, selected model, `/create-app`, and one `/add-*`. | Pending. Claude is not installed on the implementation machine. |
@@ -172,7 +224,7 @@ The Windows checks ran on 2026-10-26.
 The local CLI dispatcher supports installation and skill listing but rejects `plugin list --json` and `plugin enable`/`disable`.
 These limits prevent a full runtime-support claim.
 
-#### Commands and evidence
+#### Historical commands and evidence (original identity only)
 
 For a fresh Copilot check, set `COPILOT_HOME` to an empty disposable directory.
 Set `COPILOT_AUTO_UPDATE=false` to prevent unrelated marketplace updates.
@@ -277,7 +329,7 @@ To disable hooks, use the client's settings rather than editing only the shared 
 ## Uninstall
 
 ```
-/plugin uninstall microsoft-managed-apps
+/plugin uninstall copilot-managed-runtime
 ```
 
 ## Documentation

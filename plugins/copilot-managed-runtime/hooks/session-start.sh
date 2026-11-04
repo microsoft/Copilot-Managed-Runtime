@@ -5,7 +5,7 @@
 # message just makes the behavior visible to the agent so it isn't surprised
 # when the executed command differs from what it requested.
 
-export MSG="[microsoft-managed-apps] The PreToolUse hook defaults MS_CLI_ORIGIN to plugin for commands that invoke the ms CLI (@microsoft/cmr-cli). It preserves existing origin values, including empty values and inline assignments. The native Copilot hook also sets MS_PLUGIN_REPORT_AGENT=github-copilot from its fixed entry point. Shared hooks remove inherited agent reports so the CLI can detect the agent. The plugin does not detect agents from environment markers. Do not add attribution variables yourself when hooks are active."
+export MSG="[copilot-managed-runtime] The PreToolUse hook defaults MS_CLI_ORIGIN to plugin for commands that invoke the ms CLI (@microsoft/cmr-cli). It preserves existing origin values, including empty values and inline assignments. The native Copilot hook also sets MS_PLUGIN_REPORT_AGENT=github-copilot from its fixed entry point. Shared hooks remove inherited agent reports so the CLI can detect the agent. The plugin does not detect agents from environment markers. Do not add attribution variables yourself when hooks are active."
 
 # Read hook stdin with a bounded single-line `read -t` (payloads are
 # single-line JSON) so the hook fails open quickly instead of blocking session

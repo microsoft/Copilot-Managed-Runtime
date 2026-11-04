@@ -10,7 +10,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const windows = process.platform === 'win32';
 const shell = windows ? 'powershell' : 'bash';
 const directory = mkdtempSync(join(tmpdir(), 'Copilot Managed Runtime hooks '));
-cpSync(join(root, 'plugins/microsoft-managed-apps/hooks'), join(directory, 'hooks'), { recursive: true });
+cpSync(join(root, 'plugins/copilot-managed-runtime/hooks'), join(directory, 'hooks'), { recursive: true });
 test.after(() => rmSync(directory, { recursive: true, force: true }));
 
 function run(name, input, native = false, markers = {}) {
@@ -98,6 +98,7 @@ test('Copilot native bash input receives bash syntax even on Windows', () => {
 
 test('session guidance supports both clients and skips compaction', () => {
   const result = run('session-start', { source: 'startup' });
+  assert.match(result.additionalContext, /^\[copilot-managed-runtime\]/);
   assert.match(result.additionalContext, /MS_CLI_ORIGIN/);
   assert.match(result.additionalContext, /MS_PLUGIN_REPORT_AGENT=github-copilot/);
   assert.doesNotMatch(result.additionalContext, /plugin\//);

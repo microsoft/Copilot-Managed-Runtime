@@ -14,7 +14,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/microsoft/Managed-Apps.git"
+    "url": "https://github.com/microsoft/Copilot-Managed-Runtime.git"
   },
   "dependencies": {
     "@actions/core": "^1.11.1",

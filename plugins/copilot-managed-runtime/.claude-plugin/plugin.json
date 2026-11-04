@@ -1,18 +1,17 @@
 {
-  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "microsoft-managed-apps",
-  "version": "2.1.10",
+  "name": "copilot-managed-runtime",
+  "version": "2.1.11",
   "description": "[Preview] Create and manage apps on Copilot Managed Runtime using the @microsoft/cmr-cli (ms) toolchain.",
   "author": {
     "name": "Microsoft",
-    "url": "https://github.com/microsoft/Managed-Apps"
+    "url": "https://github.com/microsoft/Copilot-Managed-Runtime"
   },
   "homepage": "https://www.npmjs.com/package/@microsoft/cmr-cli",
-  "repository": "https://github.com/microsoft/Managed-Apps",
+  "repository": "https://github.com/microsoft/Copilot-Managed-Runtime",
   "license": "MIT",
   "keywords": [
-    "microsoft-managed-apps",
-    "managed-apps-cli",
+    "copilot-managed-runtime",
+    "cmr-cli",
     "dataverse",
     "react",
     "vite"
