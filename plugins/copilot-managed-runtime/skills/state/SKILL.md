@@ -52,26 +52,28 @@ feature.
 
 Generated state services require the Copilot Managed Runtime local gateway path during local development.
 Before testing data behavior locally, make sure the app has `@microsoft/cmr-apps-vite-plugin`
-0.4.2 or later (the version that added `devMode: 'localGateway'`; older versions won't start the
-local gateway), then opt the app into local gateway mode.
+0.5.0 or later (required for the `copilotManagedRuntime` export), then opt the app into local
+gateway mode.
 
 Check the installed version first, for example with `npm ls @microsoft/cmr-apps-vite-plugin`
 (or read `version` in `node_modules/@microsoft/cmr-apps-vite-plugin/package.json`). If it is
-0.4.2 or later, skip the install. If it is missing or older, install the latest with the app's
+0.5.0 or later, skip the install. If it is missing or older, install a compatible version with the app's
 package manager:
 
 ```bash
-npm install -D @microsoft/cmr-apps-vite-plugin@latest
-# or: bun add -D @microsoft/cmr-apps-vite-plugin@latest
-# or: pnpm add -D @microsoft/cmr-apps-vite-plugin@latest
-# or: yarn add -D @microsoft/cmr-apps-vite-plugin@latest
+npm install -D @microsoft/cmr-apps-vite-plugin@^0.5.0
+# or: bun add -D @microsoft/cmr-apps-vite-plugin@^0.5.0
+# or: pnpm add -D @microsoft/cmr-apps-vite-plugin@^0.5.0
+# or: yarn add -D @microsoft/cmr-apps-vite-plugin@^0.5.0
 ```
 
-Then update the app's `vite.config.ts` so the `managedApps()` plugin call enables the local gateway,
-preserving any existing options:
+Then update the app's `vite.config.ts` import and plugin call to use `copilotManagedRuntime`,
+enabling the local gateway while preserving any existing options:
 
 ```ts
-managedApps({
+import { copilotManagedRuntime } from '@microsoft/cmr-apps-vite-plugin'
+
+copilotManagedRuntime({
   ...existingOptions,
   devMode: 'localGateway',
 })
@@ -95,7 +97,7 @@ functions, proxies, or CORS/auth workarounds). Fix the Vite plugin/local gateway
 | Code generation | `ms project state generate-code` | handwritten model/service/validator files in the generated output folder |
 | App data access | generated services, models, validators, and typed query helpers | treating direct state requests as the default when codegen covers the scenario |
 | File attachments | direct upload to `/.ms/state/attachments`, then save the returned URL through a generated service | storing file bytes inside items |
-| Testing data behavior | Vite plugin 0.4.2+ + `managedApps({ devMode: 'localGateway' })` + `ms app dev`; Preview for pre-deploy validation | local dev without local gateway mode |
+| Testing data behavior | Vite plugin 0.5.0+ + `copilotManagedRuntime({ devMode: 'localGateway' })` + `ms app dev`; Preview for pre-deploy validation | local dev without local gateway mode |
 
 The generated services own request shapes, ETags, typed filters, paging, validation hooks, per-user
 scope behavior, and service route details. App code should compose those services with UI/business
@@ -371,8 +373,8 @@ ms project state generate-code --json
 Then:
 
 - confirm `ms.config.json` has `enabled: true` on its state (or `data`/`db`) section;
-- confirm the app has `@microsoft/cmr-apps-vite-plugin` 0.4.2 or later;
-- confirm `vite.config.ts` calls `managedApps({ devMode: 'localGateway' })` or preserves existing
+- confirm the app has `@microsoft/cmr-apps-vite-plugin` 0.5.0 or later;
+- confirm `vite.config.ts` imports `copilotManagedRuntime` and calls `copilotManagedRuntime({ devMode: 'localGateway' })` or preserves existing
   options while adding `devMode: 'localGateway'`;
 - run the narrowest relevant build/typecheck/lint for the app or package;
 - prefer generated services for schema-backed state behavior covered by codegen;
