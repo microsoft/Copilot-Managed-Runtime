@@ -1,8 +1,5 @@
 # Apps on Microsoft Copilot Managed Runtime
 
-> [!NOTE]
-> Copilot Managed Runtime is in **public preview**. APIs, templates, and tooling may change before general availability.
-
 Copilot Managed Runtime hosts Microsoft 365 line-of-business applications that automatically inherit organizational governance, security, and compliance controls from the moment they're created.
 
 This repository hosts the official first-party project **templates** and is the home for **public issues**. The tooling itself ships as npm packages under the `@microsoft` scope:

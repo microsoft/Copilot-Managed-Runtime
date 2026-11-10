@@ -10,5 +10,4 @@ For how-to questions and product guidance, see the [Copilot Managed Runtime docu
 
 ## Microsoft Support Policy
 
-Copilot Managed Runtime is currently in **public preview**. Support is limited to the resources
-listed above.
+Support is limited to the resources listed above.
