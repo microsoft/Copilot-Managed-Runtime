@@ -1,6 +1,4 @@
-# Copilot Managed Runtime Plugin `Preview`
-
-> **Preview** — this plugin is in preview and under active development. Behavior may change.
+# Copilot Managed Runtime Plugin
 
 Copilot plugin for building apps on **Copilot Managed Runtime** using `@microsoft/cmr-cli` (binary `ms`), React, and Vite. Works with both Claude Code and GitHub Copilot.
 

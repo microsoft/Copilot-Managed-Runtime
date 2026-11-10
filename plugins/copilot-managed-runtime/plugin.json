@@ -1,8 +1,8 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "copilot-managed-runtime",
-  "version": "2.1.12",
-  "description": "[Preview] Create and manage apps on Copilot Managed Runtime using the @microsoft/cmr-cli (ms) toolchain.",
+  "version": "2.1.13",
+  "description": "Create and manage apps on Copilot Managed Runtime using the @microsoft/cmr-cli (ms) toolchain.",
   "author": {
     "name": "Microsoft",
     "url": "https://github.com/microsoft/Copilot-Managed-Runtime"
