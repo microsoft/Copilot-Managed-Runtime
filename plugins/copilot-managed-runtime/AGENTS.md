@@ -126,6 +126,12 @@ Keep one skill set for all clients. Do not add `model` or `user-invocable`.
 Skills inherit the client's selected model. Claude's default keeps skills user-invocable.
 Resolve resource links relative to the containing Markdown file, not the user's project.
 
+Every skill for a new feature must state the required minimum version of
+`@microsoft/cmr-cli` near the top of its `SKILL.md`. If the feature requires the
+SDK, also state the required minimum version of `@microsoft/cmr-apps`; omit the
+SDK requirement otherwise. Verify each minimum against the release history and
+the commands or APIs the workflow actually uses, not just the latest version.
+
 ## Agent
 
 | Agent                       | Purpose                                                                 |
