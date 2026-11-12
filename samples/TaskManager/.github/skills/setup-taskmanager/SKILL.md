@@ -16,8 +16,8 @@ don't know (environment, Azure DevOps organization/project); never invent them.
   becomes the app's repository. If `git rev-parse --show-toplevel` succeeds in the sample folder,
   copy the folder out first (for example `cp -r Copilot-Managed-Runtime/samples/TaskManager my-taskmanager`;
   PowerShell: `Copy-Item -Recurse`) and continue from the copy.
-- A Power Platform environment where the user may create apps on Copilot Managed Runtime (public
-  preview), and its environment ID
+- A Power Platform environment where the user may create apps on Copilot Managed Runtime,
+  and its environment ID
   (from the Power Platform admin center or maker portal URL).
 - An Azure DevOps organization and project the user can read (and write, to edit work items).
 - The Azure DevOps, Teams and Office 365 Users connectors must be allowed in that environment.

@@ -4,9 +4,7 @@ An iteration-aware pull request review app for **GitHub** — an app hosted on
 **Copilot Managed Runtime** (React + Vite + TypeScript), built on the public **GitHub connector**
 (`shared_github`).
 
-> **Preview:** Copilot Managed Runtime is in public preview. Features, the `ms` CLI and the
-> `@microsoft/cmr-*` packages may change. See the
-> [Quickstart](https://go.microsoft.com/fwlink/?LinkId=2368962) and the
+> Start with the [Quickstart](https://go.microsoft.com/fwlink/?LinkId=2368962) and the
 > [documentation](https://go.microsoft.com/fwlink/?LinkId=2372842).
 
 This is a sample: clone it, connect it to your own environment and GitHub account, and adapt it.
