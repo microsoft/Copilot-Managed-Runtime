@@ -7,6 +7,10 @@ description: Add an app backend with `ms app add backend --provider rayfin`. Cur
 
 # Add an app backend
 
+**Minimum versions:** `@microsoft/cmr-cli` **0.32.3** and `@microsoft/cmr-apps` (SDK) **0.6.5**.
+The CLI supports backend scaffolding and packing; the SDK supports
+`initializeRayfin()` without the removed backend-availability precheck.
+
 **Required first:** pass the [Rayfin feature gate](../../shared/shared-instructions.md#rayfin-feature-gate).
 
 ## 1. Set up the database
