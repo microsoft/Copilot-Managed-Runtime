@@ -1,5 +1,6 @@
 # Task Manager
 
+> **Preview:** Copilot Managed Runtime is in public preview. Features and the `ms` CLI may change.
 > Start with the [Quickstart](https://go.microsoft.com/fwlink/?LinkId=2368962) and the
 > [documentation](https://go.microsoft.com/fwlink/?LinkId=2372842).
 

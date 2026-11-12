@@ -1,6 +1,7 @@
 # Learning Hub
 
-> New to the platform? Start with the [Quickstart](https://go.microsoft.com/fwlink/?LinkId=2368962)
+> **Preview:** Copilot Managed Runtime is in public preview. This sample and the APIs it uses may
+> change. New to the platform? Start with the [Quickstart](https://go.microsoft.com/fwlink/?LinkId=2368962)
 > and the [documentation](https://go.microsoft.com/fwlink/?LinkId=2372842).
 
 A sample app hosted on Copilot Managed Runtime for running a recurring learning series: browse past

@@ -13,7 +13,7 @@ The app gets its own platform-managed git repository. Commit `ms.config.json`, `
 `.ms/` to it with the rest of the app; only `.env.local` stays local (it is gitignored).
 
 Background: Quickstart https://go.microsoft.com/fwlink/?LinkId=2368962 and documentation
-https://go.microsoft.com/fwlink/?LinkId=2372842 for Copilot Managed Runtime.
+https://go.microsoft.com/fwlink/?LinkId=2372842 for Copilot Managed Runtime (public preview).
 
 ## Prerequisites
 

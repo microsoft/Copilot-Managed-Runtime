@@ -5,8 +5,8 @@ description: Set up the Learning Hub sample after cloning it - copy it into its 
 
 # Set up Learning Hub
 
-Learning Hub is a React + Vite + TypeScript app hosted on Copilot Managed Runtime.
-It uses the public `@microsoft/cmr-apps` packages and the `ms` CLI
+Learning Hub is a React + Vite + TypeScript app hosted on Copilot Managed Runtime (public
+preview). It uses the public `@microsoft/cmr-apps` packages and the `ms` CLI
 (`@microsoft/cmr-cli`, installed as a dev dependency, so every command below runs through
 `npx`). Background: [Quickstart](https://go.microsoft.com/fwlink/?LinkId=2368962) and
 [documentation](https://go.microsoft.com/fwlink/?LinkId=2372842).
