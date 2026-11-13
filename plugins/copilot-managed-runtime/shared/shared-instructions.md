@@ -42,7 +42,7 @@ Remove an inherited report so the CLI can detect the agent.
 - **Confirm before ACL changes**: Before running `ms app share` or `ms app unshare`, ask the user to confirm the email list. These mutate permissions on the cloud app.
 - **Confirm before `ms app delete`**: Always confirm. Never auto-`--force`, even when reading the slug from `ms.config.json`.
 - **Declare `allowedActions` for shared connections**: Before `ms app pack` or `ms app deploy`, every **shared** connection reference in `ms.config.json` (one with a non-empty `sharedConnectionId`) must declare `allowedActions`. The CLI validates this and fails the deploy otherwise. Infer the least-privilege set from what the app actually calls, propose it, and confirm with the user — see [allowed-actions.md](./allowed-actions.md).
-- **App backend work**: Follow the [Rayfin feature gate](#rayfin-feature-gate).
+- **App backend work**: Follow the [Fabric feature gate](#fabric-feature-gate).
 
 ### MUST NOT
 
@@ -186,22 +186,31 @@ Apps on Copilot Managed Runtime run inside a sandbox. Direct HTTP calls to exter
 ## App backend database
 
 Select `/add-backend` only for an explicit app backend database request
-(including `/add-backend` or Rayfin).
+(including `/add-backend`, Fabric or Rayfin).
 
-### Rayfin feature gate
+The CLI exposes the Fabric backend as **preview** with
+`ms app add backend --provider fabric`, and the CLI feature key is `fabric`.
+`rayfin/rayfin.yml`, the `@microsoft/rayfin-*` packages and the SDK's
+`initializeRayfin()` API remain unchanged. Do not rename those paths, packages or APIs to Fabric.
+The CLI feature is enabled by default in the preview, but explicit opt-outs and
+server-side availability checks still apply; always read the effective status.
+
+### Fabric feature gate
 
 Before recommending or using `/add-backend` or its references, editing
 database code, installing dependencies, or checking database behavior, read the
 CLI's effective feature status:
 
 ```bash
-ms feature status --name rayfin --json
+ms feature status --name fabric --json
 ```
 
 Proceed only when the command exits successfully, `"success": true` and
 `feature.enabled` is `true`. A disabled, missing or unknown feature, failed
-command or malformed response blocks Rayfin work. Report the result; do not
+command or malformed response blocks Fabric backend work. Report the result; do not
 silently substitute another database for an explicit app backend database request.
+If the CLI does not recognize `fabric`, report the compatibility gap and stop;
+do not retry with the old `rayfin` feature key.
 
 Do not change feature settings or offer to enable the feature.
 An existing `rayfin/` folder, installed SDK or request to use Rayfin does not
@@ -209,12 +218,16 @@ bypass this gate. Leave unrelated state/connector workflows unchanged.
 
 Reuse a successful check only within the same workflow and unchanged CLI
 execution environment. Recheck after environment/CLI changes and before app
-packaging or deployment when the app uses Rayfin.
+packaging or deployment when the app uses a Fabric backend.
 This availability check does not establish runtime authorization.
 
-With the gate passed, Rayfin provides the app backend database, not an external
-integration. Follow `/add-backend` and its local modeling/CRUD references,
+With the gate passed, Fabric (using the Rayfin runtime) provides the app backend
+database, not an external integration. Follow `/add-backend` and its local modeling/CRUD references,
 then use the existing Copilot Managed Runtime build and deploy workflow.
+Before starting any dev server for a backend app, wait for backend setup to
+complete and verify `rayfin/rayfin.yml` is in place, following the
+[/add-backend startup prerequisite](../skills/add-backend/SKILL.md#4-follow-the-app-lifecycle).
+Do not treat pending or failed setup as permission to start a frontend-only server.
 
 ---
 

@@ -15,7 +15,12 @@ Apps on Copilot Managed Runtime run locally against the App Player with hot relo
 
 ### App backend database
 
-Use `/add-backend` only for an explicitly requested app backend database with Rayfin.
+Use `/add-backend` only for an explicitly requested app backend database with
+Fabric (preview, using the Rayfin runtime). The scaffold command is
+`ms app add backend --provider fabric`; the skill verifies that the installed CLI
+supports this provider and the `fabric` feature key before using them.
+Existing `rayfin/` configuration, `@microsoft/rayfin-*` packages and `initializeRayfin()`
+remain unchanged.
 Its two reference documents point to the installed SDK docs for API guidance:
 
 | Reference | Code and checks |
@@ -23,10 +28,12 @@ Its two reference documents point to the installed SDK docs for API guidance:
 | [Data modeling](skills/add-backend/references/rayfin-data-modeling.md) | Entity/client integration using installed SDK docs. |
 | [CRUD UI](skills/add-backend/references/rayfin-crud-ui.md) | Lists, forms, mutation handling and persistence checks. |
 
-The entry skill applies the [shared feature policy](shared/shared-instructions.md#rayfin-feature-gate).
+The entry skill applies the [shared feature policy](shared/shared-instructions.md#fabric-feature-gate).
 The database follows the same [build and deployment workflow](shared/development-standards.md#build--deploy)
 as the rest of the app, not a separate Rayfin workflow. Scaffolding prepares backend
-definitions.
+definitions. `/add-backend`, `/create-app` and `/dev` wait for backend setup to
+complete and `rayfin/rayfin.yml` to be in place before starting a dev server.
+This local setup prerequisite does not require provisioning or deploying first.
 
 ## Prerequisites
 

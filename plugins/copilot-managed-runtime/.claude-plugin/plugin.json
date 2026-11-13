@@ -1,6 +1,6 @@
 {
   "name": "copilot-managed-runtime",
-  "version": "2.1.14",
+  "version": "2.1.15",
   "description": "Create and manage apps on Copilot Managed Runtime using the @microsoft/cmr-cli (ms) toolchain.",
   "author": {
     "name": "Microsoft",
