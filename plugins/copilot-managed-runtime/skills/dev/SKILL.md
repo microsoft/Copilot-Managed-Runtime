@@ -39,6 +39,17 @@ $BIN auth status
 
 If auth status reports the wrong UPN or is signed out, prompt the user to fix it before continuing (`ms auth login`). Don't try to repair auth silently — wrong-account dev sessions waste time downstream.
 
+**Fabric backend (preview, Rayfin runtime):** if this app uses a backend, or backend
+setup was requested or is in progress, follow the
+[Rayfin feature gate](../../shared/shared-instructions.md#rayfin-feature-gate)
+and the [/add-backend startup prerequisite](../add-backend/SKILL.md#4-follow-the-app-lifecycle).
+Wait until backend setup has completed and `rayfin/rayfin.yml` is in place before
+Step 3, including when Vite is started separately. A missing file does not mean
+the app is frontend-only when backend setup is pending. If setup failed or is
+incomplete, report the blocker and finish `/add-backend` before starting a server;
+do not bypass it with `--config-only`. Apps without a backend requirement keep
+the existing workflow.
+
 ### Step 3: Start the Dev Server
 
 Default invocation:

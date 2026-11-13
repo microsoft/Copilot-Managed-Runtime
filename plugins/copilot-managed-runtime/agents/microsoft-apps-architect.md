@@ -50,10 +50,13 @@ ms --version           # Bin name has flipped between dev builds
 
 ### App backend database
 
-Rayfin provides the app backend database; it is not a connector.
+Fabric (preview, using the Rayfin runtime) provides the app backend database; it is
+not a connector. Use `--provider fabric` for scaffolding, but keep the Rayfin paths,
+feature key, packages and SDK APIs unchanged. Wait for backend setup to complete
+and `rayfin/rayfin.yml` to exist before starting a dev server.
 
 For an explicitly requested app backend database (including `/add-backend` or
-Rayfin), follow the [shared feature policy](../shared/shared-instructions.md#rayfin-feature-gate)
+Fabric or Rayfin), follow the [shared feature policy](../shared/shared-instructions.md#rayfin-feature-gate)
 and use [/add-backend](../skills/add-backend/SKILL.md).
 
 ### Connector-First Principle

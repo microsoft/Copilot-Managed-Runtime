@@ -186,7 +186,14 @@ Apps on Copilot Managed Runtime run inside a sandbox. Direct HTTP calls to exter
 ## App backend database
 
 Select `/add-backend` only for an explicit app backend database request
-(including `/add-backend` or Rayfin).
+(including `/add-backend`, Fabric or Rayfin).
+
+The CLI exposes the Fabric backend as **preview** with
+`ms app add backend --provider fabric`. The feature key remains `rayfin`, as do
+`rayfin/rayfin.yml`, the `@microsoft/rayfin-*` packages and the SDK's
+`initializeRayfin()` API. Do not rename those paths, packages or APIs to Fabric.
+The CLI feature is enabled by default in the preview, but explicit opt-outs and
+server-side availability checks still apply; always read the effective status.
 
 ### Rayfin feature gate
 
@@ -212,9 +219,13 @@ execution environment. Recheck after environment/CLI changes and before app
 packaging or deployment when the app uses Rayfin.
 This availability check does not establish runtime authorization.
 
-With the gate passed, Rayfin provides the app backend database, not an external
-integration. Follow `/add-backend` and its local modeling/CRUD references,
+With the gate passed, Fabric (using the Rayfin runtime) provides the app backend
+database, not an external integration. Follow `/add-backend` and its local modeling/CRUD references,
 then use the existing Copilot Managed Runtime build and deploy workflow.
+Before starting any dev server for a backend app, wait for backend setup to
+complete and verify `rayfin/rayfin.yml` is in place, following the
+[/add-backend startup prerequisite](../skills/add-backend/SKILL.md#4-follow-the-app-lifecycle).
+Do not treat pending or failed setup as permission to start a frontend-only server.
 
 ---
 

@@ -83,7 +83,7 @@ Wait for their answer. Do NOT present a multiple-choice list of app types. Once 
 5. **Consolidate assumptions into the plan.** Include the generated name, requested capabilities, inferred UI, and any state schema or connector choice in one complete plan. Do not ask separate questions to confirm each assumption.
 
 **Explicit app backend request:** if the user requests an app backend database
-(including `/add-backend` or Rayfin), follow the
+(including `/add-backend`, Fabric or Rayfin), follow the
 [Rayfin feature gate](../../shared/shared-instructions.md#rayfin-feature-gate)
 and plan `/add-backend` for that requirement instead of substituting state or a
 connector. Keep the state/connector selection above for other data needs.
@@ -209,13 +209,16 @@ dependencies and its [data modeling reference](../add-backend/references/rayfin-
 Forward the approved entities and the feature-check result with its CLI execution
 context so the shared reuse policy applies.
 
-Verify the authored entities and the [host-backed client helper](../add-backend/references/rayfin-data-modeling.md#step-4-initialize-through-managed-apps)
+Verify the authored entities and the [host-backed client helper](../add-backend/references/rayfin-data-modeling.md#step-4-initialize-through-copilot-managed-runtime)
 exist, and capture their paths for Step 10. Defer UI work to Step 10 and checks to
 Step 11; do not deploy during setup.
 
-For Rayfin, completion here means scaffolding, dependency installation and
-entity/client implementation, not provisioning. An unprovisioned backend does
-not block Step 10; do not ask for an existing database or connection settings.
+For Fabric (preview, Rayfin runtime), completion here means scaffolding, dependency
+installation, `rayfin/rayfin.yml` in place and entity/client implementation, not
+provisioning. Wait for this setup to finish before starting any dev server; do not
+run it in parallel with Step 11. If setup fails or configuration is missing, report
+the blocker and finish setup before continuing. An unprovisioned backend does not
+block Step 10; do not ask for an existing database or connection settings.
 Follow the backend skill's lifecycle guidance.
 
 ### Step 10: Implement the App
@@ -231,6 +234,12 @@ Generate the code that delivers the experience described in the approved plan:
 When the implementation is complete, the next step's `npm run build` is the gate that proves everything compiles end-to-end.
 
 ### Step 11: Build and start local dev
+
+For an app with a Fabric/Rayfin backend, first enforce the
+[/add-backend startup prerequisite](../add-backend/SKILL.md#4-follow-the-app-lifecycle):
+Step 9 must have completed and `rayfin/rayfin.yml` must exist. Do not start
+`ms app dev` or Vite while backend configuration is still being set up. This is a
+local setup prerequisite, not a requirement to provision or deploy in advance.
 
 ```bash
 npm install            # safe to re-run; idempotent.
