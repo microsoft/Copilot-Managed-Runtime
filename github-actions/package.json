@@ -1,12 +1,13 @@
 {
   "name": "@microsoft/cmr-apps-github-actions",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "GitHub Actions for building and deploying apps on Copilot Managed Runtime from CI",
   "main": "index.js",
   "scripts": {
     "clean": "node node_modules/gulp/bin/gulp.js clean",
     "build": "node node_modules/gulp/bin/gulp.js",
+    "test": "npm run build && node --test tests/*.test.cjs",
     "dist": "node node_modules/gulp/bin/gulp.js dist",
     "ci": "node node_modules/gulp/bin/gulp.js ci"
   },

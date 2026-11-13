@@ -37,6 +37,10 @@
 #   CLI's SPN env vars (MS_CLI_SP_* + MS_CLI_USE_SP_AUTH). The service
 #   accepts Service Principal identities for Copilot Managed Runtime operations. Provide all three
 #   inputs together to deploy as the SPN with no developer in the loop.
+#   Supplying only some inputs fails before the CLI is launched, even if the
+#   runner has inherited credentials or a cached identity.
+#   Complete inputs disable inherited MS_CLI_USE_HTTP_FORWARD and
+#   MS_CLI_USE_NOOP_AUTH in the deployment subprocess to enforce SPN selection.
 # ---------------------------------------------------------------------------
 #
 # Example 1 — repoType:'none' with locally-built artifact:
@@ -111,9 +115,10 @@ inputs:
     default: ''
 
   # ── Service Principal authentication ──────────────────────────────────────
-  # All three must be provided together to enable SPN mode. If any is empty,
-  # the action will not set MS_CLI_USE_SP_AUTH and the CLI will fail with a
-  # clear "not signed in" error rather than silently using a stale identity.
+  # All three must be provided together to enable SPN mode. Partial inputs fail
+  # before deployment; whitespace-only inputs count as missing. If all three
+  # are omitted, inherited environment and CLI authentication behavior remain
+  # unchanged (including any cached identity).
 
   app-id:
     description: 'SPN client ID. Maps to MS_CLI_SP_CLIENT_ID.'

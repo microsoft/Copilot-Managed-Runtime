@@ -19724,10 +19724,10 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
       (0, command_1.issueCommand)("error", (0, utils_1.toCommandProperties)(properties), message instanceof Error ? message.toString() : message);
     }
     exports2.error = error2;
-    function warning2(message, properties = {}) {
+    function warning(message, properties = {}) {
       (0, command_1.issueCommand)("warning", (0, utils_1.toCommandProperties)(properties), message instanceof Error ? message.toString() : message);
     }
-    exports2.warning = warning2;
+    exports2.warning = warning;
     function notice(message, properties = {}) {
       (0, command_1.issueCommand)("notice", (0, utils_1.toCommandProperties)(properties), message instanceof Error ? message.toString() : message);
     }
@@ -19814,6 +19814,8 @@ var MsInstalledEnvVarName = "MS_MANAGED_APPS_INSTALLED";
 // out/actions/ms-app-deploy/index.js
 var CLI_ENV_VARS = {
   useSpAuth: "MS_CLI_USE_SP_AUTH",
+  useHttpForward: "MS_CLI_USE_HTTP_FORWARD",
+  useNoopAuth: "MS_CLI_USE_NOOP_AUTH",
   spClientId: "MS_CLI_SP_CLIENT_ID",
   spClientSecret: "MS_CLI_SP_CLIENT_SECRET",
   spTenantId: "MS_CLI_SP_TENANT_ID",
@@ -19849,6 +19851,12 @@ async function main() {
   const workingDirectory = resolveWorkingDirectory(core.getInput(argName.workingDirectory, { required: false }));
   if (clientSecret)
     core.setSecret(clientSecret);
+  const cliEnv = buildCliEnv({
+    cloud,
+    appId,
+    clientSecret,
+    tenantId
+  });
   if (process.env[MsInstalledEnvVarName] !== "true") {
     throw new Error("ms CLI is not installed. Add the install-ms-cli action before ms-app-deploy:\n  - uses: microsoft/Copilot-Managed-Runtime/github-actions/install-ms-cli@main");
   }
@@ -19870,12 +19878,6 @@ async function main() {
   } else if (isEscapeHatch) {
     core.info('repoType is "none" \u2014 CLI will pack and upload (no --commit).');
   }
-  const cliEnv = buildCliEnv({
-    cloud,
-    appId,
-    clientSecret,
-    tenantId
-  });
   const deployResult = await runDeploy(workingDirectory, cliEnv, { commitSha, artifactPath });
   const deployedAppId = deployResult.appId ?? deployResult["id"];
   if (deployedAppId)
@@ -19951,14 +19953,17 @@ function buildCliEnv(opts) {
   }
   env[CLI_ENV_VARS.cloudInstance] = opts.cloud;
   const hasFullSpn = opts.appId && opts.clientSecret && opts.tenantId;
+  if (!hasFullSpn && (opts.appId || opts.clientSecret || opts.tenantId)) {
+    throw new Error("Partial Service Principal inputs supplied. Provide all of app-id, client-secret, tenant-id, or omit all three. Deployment was not started.");
+  }
   if (hasFullSpn) {
+    env[CLI_ENV_VARS.useHttpForward] = "false";
+    env[CLI_ENV_VARS.useNoopAuth] = "false";
     env[CLI_ENV_VARS.useSpAuth] = "true";
     env[CLI_ENV_VARS.spClientId] = opts.appId;
     env[CLI_ENV_VARS.spClientSecret] = opts.clientSecret;
     env[CLI_ENV_VARS.spTenantId] = opts.tenantId;
     core.info("Service Principal auth enabled.");
-  } else if (opts.appId || opts.clientSecret || opts.tenantId) {
-    core.warning("Partial SPN inputs supplied (need all of app-id, client-secret, tenant-id). Falling back to whatever identity is already cached by the CLI.");
   }
   return env;
 }

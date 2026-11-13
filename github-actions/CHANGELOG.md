@@ -10,6 +10,17 @@ the new version **in the same PR that bumps the version**, before it merges to
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-11-13
+
+### Fixed
+- `ms-app-deploy` rejects partial Service Principal inputs before launching the
+  CLI instead of falling back to an inherited or cached identity. Whitespace-only
+  inputs count as missing; complete inputs and intentional no-input CLI
+  authentication retain their existing behavior.
+- Complete deployment credentials disable inherited HTTP-forward and no-op
+  authentication modes in the CLI subprocess, ensuring they cannot override
+  explicitly requested Service Principal authentication.
+
 ## [1.0.1] - 2026-06-22
 
 Initial release of the Copilot Managed Runtime GitHub Actions.

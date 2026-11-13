@@ -66,6 +66,7 @@ sequenceDiagram
     participant RP as Copilot Managed Runtime service
 
     WF->>ACT: with working-directory, app-id, client-secret, tenant-id
+    ACT->>ACT: reject partial SPN inputs before launching CLI
     ACT->>ACT: require MS_MANAGED_APPS_INSTALLED == true
     ACT->>ACT: read ms.config.json -> repoType
     ACT->>ACT: set MS_CLI_* SPN env (only if all 3 provided)
@@ -129,6 +130,14 @@ flowchart LR
   `tenant-id`) — the actions set `MS_CLI_USE_SP_AUTH` + `MS_CLI_SP_*`, and the service
   accepts the SPN for Copilot Managed Runtime operations, so the deploy runs with no developer in
   the loop.
+- **Deployment input validation:** `ms-app-deploy` rejects partial Service
+  Principal inputs before starting the CLI, regardless of inherited or cached
+  credentials. Whitespace-only inputs count as missing. Omitting all three
+  inputs leaves identity selection to the CLI; it does not guarantee a
+  "not signed in" error or prevent cached authentication.
+- **Explicit deployment identity:** complete SPN inputs disable inherited
+  HTTP-forward and no-op auth flags in the deploy subprocess only, since those
+  providers otherwise take precedence over SPN auth in the CLI.
 - **Sharing:** for `repoType: none` apps (no platform-managed repo),
   `ms app share <id> --access edit` grants contributor access at the **app scope**
   rather than the repository scope.

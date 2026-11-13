@@ -49,6 +49,25 @@ jobs:
 
 See each action's `action.yml` for the full input/output reference.
 
+### Deployment authentication
+
+For `ms-app-deploy`, provide `app-id` (the Service Principal client ID, not the
+deployed app ID), `client-secret`, and `tenant-id` together. If only some inputs
+are supplied, the action fails before launching the CLI, even when inherited
+credentials or a cached CLI identity are available. Input values are trimmed;
+whitespace-only values count as missing. The error names the required inputs,
+not their values.
+
+Omitting all three inputs preserves the inherited environment and delegates
+authentication to the CLI, including any cached identity. Three empty secrets
+are indistinguishable from intentionally omitted inputs; workflows requiring
+Service Principal authentication should ensure all three secrets are configured.
+Complete inputs override inherited `MS_CLI_USE_SP_AUTH` and `MS_CLI_SP_*` values.
+They also disable `MS_CLI_USE_HTTP_FORWARD` and `MS_CLI_USE_NOOP_AUTH` in the
+deployment subprocess so those higher-priority providers cannot replace the
+requested Service Principal. The action's own environment is not modified.
+Credential validity and authentication failures are handled by the CLI.
+
 ## Agent skills
 
 Step-by-step guides any operator — or coding-agent CLI (GitHub Copilot CLI, Claude Code, etc.) — can follow. See [`AGENTS.md`](AGENTS.md) for the index.
@@ -69,11 +88,15 @@ cd github-actions
 npm install
 npm run build
 npm run dist
+npm test
 ```
 
 This compiles the TypeScript sources under `src/actions/` and bundles each action into a single JS file under `dist/actions/<action-name>/index.js` via esbuild.
 
 Each action's `action.yml` references the bundled `dist/actions/<name>/index.js` as its entry point.
+`npm test` rebuilds the actions and runs isolated deployment-action tests with
+Node's built-in test runner. The tests intercept the CLI subprocess boundary;
+they do not sign in or deploy to a service.
 
 ## Versioning
 
