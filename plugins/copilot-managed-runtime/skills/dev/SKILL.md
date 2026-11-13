@@ -41,7 +41,7 @@ If auth status reports the wrong UPN or is signed out, prompt the user to fix it
 
 **Fabric backend (preview, Rayfin runtime):** if this app uses a backend, or backend
 setup was requested or is in progress, follow the
-[Rayfin feature gate](../../shared/shared-instructions.md#rayfin-feature-gate)
+[Fabric feature gate](../../shared/shared-instructions.md#fabric-feature-gate)
 and the [/add-backend startup prerequisite](../add-backend/SKILL.md#4-follow-the-app-lifecycle).
 Wait until backend setup has completed and `rayfin/rayfin.yml` is in place before
 Step 3, including when Vite is started separately. A missing file does not mean

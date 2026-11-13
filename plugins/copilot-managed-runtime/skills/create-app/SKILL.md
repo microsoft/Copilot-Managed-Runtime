@@ -84,7 +84,7 @@ Wait for their answer. Do NOT present a multiple-choice list of app types. Once 
 
 **Explicit app backend request:** if the user requests an app backend database
 (including `/add-backend`, Fabric or Rayfin), follow the
-[Rayfin feature gate](../../shared/shared-instructions.md#rayfin-feature-gate)
+[Fabric feature gate](../../shared/shared-instructions.md#fabric-feature-gate)
 and plan `/add-backend` for that requirement instead of substituting state or a
 connector. Keep the state/connector selection above for other data needs.
 

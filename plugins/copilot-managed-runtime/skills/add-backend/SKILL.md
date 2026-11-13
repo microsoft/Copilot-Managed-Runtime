@@ -12,10 +12,11 @@ description: Add a Fabric backend (preview) with `ms app add backend --provider 
 without the removed backend-availability precheck. The Fabric provider spelling
 additionally requires a CLI build containing
 [bic/PowerPlatform-Managed-Host#2237](https://microsoft.ghe.com/bic/PowerPlatform-Managed-Host/pull/2237);
-the baseline CLI minimum alone does not establish that support. Verify it below
-rather than assuming an unreleased version number.
+the CLI must also support the `fabric` feature key. The baseline CLI minimum alone
+does not establish either capability. Verify them below rather than assuming an
+unreleased version number.
 
-**Required first:** pass the [Rayfin feature gate](../../shared/shared-instructions.md#rayfin-feature-gate).
+**Required first:** pass the [Fabric feature gate](../../shared/shared-instructions.md#fabric-feature-gate).
 
 ## 1. Set up the database
 
@@ -34,7 +35,7 @@ Keep the existing app layout and exclude `rayfin/.temp/` from version control.
 
 This prepares the app's backend definitions; it does not provision a database.
 Fabric is the app backend, not an existing database to select or connect to.
-The CLI branding does not rename `rayfin/`, `rayfin.yml`, the `rayfin` feature key,
+The CLI provider and feature key are `fabric`, but this does not rename `rayfin/`, `rayfin.yml`,
 `@microsoft/rayfin-*` packages or `initializeRayfin()`. Do not migrate those contracts.
 
 ## 2. Install dependencies

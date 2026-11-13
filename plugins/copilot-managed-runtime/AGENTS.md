@@ -77,12 +77,12 @@ This plugin uses a memory bank (`memory-bank.md`) to persist state across sessio
 
 ### App backend database
 
-**Setup:** `/add-backend` scaffolds Fabric backend configuration and code (preview) with `ms app add backend --provider fabric`; scaffolding does not provision the database. Its local references use the installed SDK docs for API guidance. Keep the Rayfin paths, feature key, packages and SDK APIs unchanged. Wait for backend setup to complete and `rayfin/rayfin.yml` to exist before starting a dev server.
+**Setup:** `/add-backend` scaffolds Fabric backend configuration and code (preview) with `ms app add backend --provider fabric`; scaffolding does not provision the database. Its local references use the installed SDK docs for API guidance. Use the `fabric` feature key, but keep the Rayfin paths, packages and SDK APIs unchanged. Wait for backend setup to complete and `rayfin/rayfin.yml` to exist before starting a dev server.
 
 Select it only for an explicit app backend database request (including
 `/add-backend`, Fabric or Rayfin).
 
-All Rayfin work requires the [Rayfin feature gate](shared/shared-instructions.md#rayfin-feature-gate).
+All Fabric backend work requires the [Fabric feature gate](shared/shared-instructions.md#fabric-feature-gate).
 
 | Reference | Purpose |
 | --- | --- |
