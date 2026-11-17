@@ -12,7 +12,7 @@ Adds or removes user access to the app in the current directory. The CLI resolve
 
 ## Workflow
 
-1. Memory Bank → 2. Verify Project + Env → 3. Mode (share / unshare) → 4. Collect Emails → 5. Confirm → 6. Run → 7. Surface Partial-Success Envelope
+1. Memory Bank → 2. Verify Project + Env → 3. Infer Mode → 4. Resolve Recipients → 5. Confirm Once → 6. Run → 7. Surface Partial-Success Envelope
 
 ---
 
@@ -28,23 +28,40 @@ BIN=ms
 $BIN auth status                                         # must report the expected UPN
 ```
 
-### Step 3: Mode
+### Step 3: Infer Mode
 
-Ask whether the user wants to **share** (add access) or **unshare** (remove access). Default to share unless the prompt obviously indicates removal.
+Infer **share** (add access) or **unshare** (remove access) from the user's request or
+caller-provided context. Use share for an unqualified `/share` invocation. Do not ask the user
+to choose a mode when their intent is clear. Ask only when the request contains contradictory
+instructions about adding versus removing access; never guess in that case.
 
-### Step 4: Collect Emails
+### Step 4: Resolve Recipients
 
-Accept a comma-separated email list. Validate basic shape (`user@domain`) before passing through; don't try to resolve them yourself — `ms` handles Graph resolution and will return warnings for unresolved entries.
+Reuse emails or object IDs already supplied in the request or caller-provided context.
+Ask once for recipients only when they are missing or ambiguous, and ask only about unresolved
+entries rather than making the user retype the known list.
+
+Accept a comma-separated recipient list. Validate basic email shape (`user@domain`) before
+passing through; don't try to resolve identities yourself — `ms` handles Graph resolution and
+will return warnings for unresolved entries.
 
 If the user passes Object GUIDs (already-resolved principals), pass them through as-is — the CLI accepts both forms.
 
-### Step 5: Confirm
+### Step 5: Confirm Once
 
-Show the user exactly what will run, then ask for confirmation:
+Show the selected operation, app, complete recipient list and exact command in one approval.
+Use wording that matches the operation:
 
 > "About to **share** `<app-name>` with: `alice@contoso.com, bob@contoso.com`. Confirm?"
 
-Wait for explicit yes. Never auto-proceed — ACL changes affect production users.
+Or:
+
+> "About to **remove access** to `<app-name>` for: `alice@contoso.com, bob@contoso.com`. Confirm?"
+
+Wait for explicit yes. Never auto-proceed — ACL changes affect production users. Confirm the
+whole list once, not each recipient separately. Do not ask again if this exact operation,
+app and recipient list were already explicitly approved in the current workflow. If any of
+them changes, obtain a new approval for the changed scope.
 
 ### Step 6: Run
 
@@ -69,7 +86,10 @@ The CLI returns a JSON envelope with `partialFailure: boolean` and `warnings: []
 - The RP call succeeded — share state is updated for resolved users.
 - Warnings list the unresolved entries (typo'd email, account doesn't exist in the tenant, Graph couldn't find them, etc.).
 
-Print warnings verbatim and ask the user whether to re-run with corrected entries:
+Print warnings verbatim, identify the recipients whose access was successfully added or
+removed, and list the unresolved entries. Use wording that matches share or unshare.
+If a retry is wanted, ask directly for corrected emails or object IDs instead of first
+asking a yes/no retry question:
 
 ```
 Share completed with warnings:
@@ -78,10 +98,14 @@ Share completed with warnings:
 
 Share state updated for: alice@contoso.com (1 of 3 resolved).
 
-Would you like to retry the 2 unresolved entries with corrections?
+If you'd like to retry, provide corrected emails or object IDs for the 2 unresolved entries.
 ```
 
-If the user confirms, loop back to Step 4 with the corrected list. Don't retry automatically — typos and tenant-membership issues need human resolution.
+When the user supplies corrections, return to Step 4 with only the corrected entries,
+preserving the operation and app. Confirm that corrected retry list once in Step 5 before
+running it; do not include recipients that already succeeded. Do not retry automatically
+or ask an additional preliminary retry question — typos and tenant-membership issues need
+human resolution.
 
 ---
 
@@ -92,4 +116,4 @@ If the user confirms, loop back to Step 4 with the corrected list. Don't retry a
 | User passes a single email                                       | Run as-is; the envelope still applies (just with one entry).                                                   |
 | User passes a mix of emails and Object GUIDs                     | Pass through as one comma-separated list — the CLI accepts both.                                               |
 | `ms app share` returns non-zero (not a partial-failure envelope) | A hard error (auth, env, app-not-found). Surface verbatim and STOP. Do not retry.                              |
-| User says "share with everyone"                                  | Decline — there is no "everyone" semantic. Ask for an explicit list.                                            |
+| User says "share with everyone"                                  | Explain that named-recipient sharing requires an explicit email/object-ID list and ask for it. Mention `/share-link` as a different, tenant-wide redemption model when appropriate, but never silently create a link or substitute broader access. |
