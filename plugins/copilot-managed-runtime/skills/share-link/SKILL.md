@@ -123,7 +123,7 @@ $BIN app share link revoke --link-id a3f1 --force
 
 **Create:** Print the full share URL. Remind the user this grants read-only app access to anyone in the tenant who opens it, and that they can revoke it at any time with `ms app share link revoke --link-id <id>`.
 
-**List:** Present the table. Offer to create or revoke links from here if appropriate.
+**List:** Present the table (or state that no links are active) and finish the listing request. Do not ask whether to create or revoke links next. This does not interrupt listing used to resolve links for an already-requested revoke operation.
 
 **Revoke:**
 - `existed: true` (or non-JSON success): confirm the link is gone.
