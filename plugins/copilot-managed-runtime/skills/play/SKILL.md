@@ -40,9 +40,11 @@ $BIN auth status                                         # must report the expec
 
 ### Step 3: Resolve Mode
 
-If not already clear from the user's request, ask:
-
-> "Do you want to open the **live** deployed version, a **preview** of the latest code on main, or a preview of a **specific commit**?"
+Honor explicit preview or specific-commit intent from the user's request or caller-provided
+context. Otherwise default to the live deployed version without asking the user to choose a
+mode. Ask only when the request contains conflicting intent or a requested commit-specific
+preview lacks a commit that can be resolved from the provided context. Do not silently
+substitute live or latest-main preview for a requested specific commit.
 
 Map intent to mode:
 
