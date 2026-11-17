@@ -13,6 +13,22 @@ Standards that apply to all Copilot Managed Runtime skills.
 - Check with `node --version` before starting.
 - If the user has multiple versions, suggest `nvm use 22`.
 
+## CMR package baseline
+
+The published GA baseline is **1.0.0** for `@microsoft/cmr-cli`,
+`@microsoft/cmr-apps`, `@microsoft/cmr-apps-common` and
+`@microsoft/cmr-apps-vite-plugin` (verified against the public npm registry on
+2026-11-16). These are CMR package versions, not Rayfin package versions.
+The CLI's Fabric scaffold uses compatible Rayfin `^2.0.0` app dependencies.
+
+Skills state their required versions where used. Check the installed version and
+the configured registry before changing dependencies; do not assume an old
+`@latest` result meets a skill's minimum. If the registry cannot resolve the
+required release, report the mismatch and stop the affected workflow rather than
+silently using an older release. Keep the CLI global and let the scaffold/SDK
+resolve `cmr-apps-common`; do not add it directly unless app code imports it.
+Do not downgrade newer compatible versions.
+
 ## CLI Install
 
 - **Install `@microsoft/cmr-cli` globally**, never per-workspace, so the `ms` binary is on PATH and the per-app workspace stays clean.

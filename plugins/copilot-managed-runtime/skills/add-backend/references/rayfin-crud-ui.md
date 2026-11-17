@@ -6,6 +6,10 @@ Reference for [/add-backend](../SKILL.md).
 
 Use the entities and [host-initialized client](./rayfin-data-modeling.md#step-4-initialize-through-copilot-managed-runtime)
 from data modeling.
+Use the **CMR SDK 1.0.0 / Rayfin 2** composed client with its data service
+registered. An auth-only client from `initializeRayfin()` without services does
+not provide CRUD capabilities. Follow the installed data service's API rather
+than assuming Rayfin 1.x client methods.
 The client API belongs to the installed packages; this reference covers the UI.
 Paths are relative to the app root; complete the entry skill's `npm install` step
 if dependencies are not installed.

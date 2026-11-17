@@ -8,6 +8,10 @@ allowed-tools: Read Grep Bash AskUserQuestion
 
 # Local Dev
 
+**Package baseline:** `@microsoft/cmr-cli` **1.0.0**. Fabric backend apps also
+require `@microsoft/cmr-apps` **1.0.0** or later with Rayfin 2 dependencies.
+See the [CMR package baseline](../../shared/development-standards.md#cmr-package-baseline).
+
 Starts `ms app dev` in the project's working directory. The CLI runs two servers — a dev script (Vite or equivalent, default port 8080) and a config server — and prints the App Player URL the user opens in their browser.
 
 This skill does NOT deploy to the cloud. For that, use `/deploy`.
@@ -38,6 +42,17 @@ $BIN auth status
 ```
 
 If auth status reports the wrong UPN or is signed out, prompt the user to fix it before continuing (`ms auth login`). Don't try to repair auth silently — wrong-account dev sessions waste time downstream.
+
+**Fabric backend (preview, Rayfin runtime):** if this app uses a backend, or backend
+setup was requested or is in progress, follow the
+[Fabric feature gate](../../shared/shared-instructions.md#fabric-feature-gate)
+and the [/add-backend startup prerequisite](../add-backend/SKILL.md#4-follow-the-app-lifecycle).
+Wait until backend setup has completed and `rayfin/rayfin.yml` is in place before
+Step 3, including when Vite is started separately. A missing file does not mean
+the app is frontend-only when backend setup is pending. If setup failed or is
+incomplete, report the blocker and finish `/add-backend` before starting a server;
+do not bypass it with `--config-only`. Apps without a backend requirement keep
+the existing workflow.
 
 ### Step 3: Start the Dev Server
 
