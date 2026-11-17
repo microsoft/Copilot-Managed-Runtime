@@ -34,6 +34,10 @@ as the rest of the app, not a separate Rayfin workflow. Scaffolding prepares bac
 definitions. `/add-backend`, `/create-app` and `/dev` wait for backend setup to
 complete and `rayfin/rayfin.yml` to be in place before starting a dev server.
 This local setup prerequisite does not require provisioning or deploying first.
+The backend workflow requires CMR CLI and SDK **1.0.0**, with Rayfin **2.x**
+dependencies and explicit data-service composition through the host-backed helper.
+See the [CMR package baseline](shared/development-standards.md#cmr-package-baseline)
+for the CLI, SDK, common package and Vite plugin versions.
 
 ## Prerequisites
 

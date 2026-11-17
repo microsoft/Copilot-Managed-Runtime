@@ -7,14 +7,11 @@ description: Add a Fabric backend (preview) with `ms app add backend --provider 
 
 # Add a Fabric app backend (preview)
 
-**Minimum versions:** backend scaffolding and packing require `@microsoft/cmr-cli`
-**0.32.3**; `@microsoft/cmr-apps` (SDK) **0.6.5** supports `initializeRayfin()`
-without the removed backend-availability precheck. The Fabric provider spelling
-additionally requires a CLI build containing
-[bic/PowerPlatform-Managed-Host#2237](https://microsoft.ghe.com/bic/PowerPlatform-Managed-Host/pull/2237);
-the CLI must also support the `fabric` feature key. The baseline CLI minimum alone
-does not establish either capability. Verify them below rather than assuming an
-unreleased version number.
+**Minimum versions for this workflow:** `@microsoft/cmr-cli` **1.0.0** and
+`@microsoft/cmr-apps` (SDK) **1.0.0**. The CLI release includes the Fabric provider
+and feature key and scaffolds compatible Rayfin **`^2.0.0`** dependencies. The SDK
+uses Rayfin 2 service composition and explicit browser authentication through the
+host-backed helper. See the [CMR package baseline](../../shared/development-standards.md#cmr-package-baseline).
 
 **Required first:** pass the [Fabric feature gate](../../shared/shared-instructions.md#fabric-feature-gate).
 
@@ -51,6 +48,9 @@ Use the app's existing package manager and lockfile if it does not use npm.
 Report installation or peer-dependency errors; do not force-install or downgrade
 the app to bypass them. Add missing direct dependencies only as required by the
 implementation described in the references.
+Check the installed SDK version; a preserved pre-1.0.0 dependency is not compatible
+with this workflow. Report it and update the app's declared SDK dependency to
+`^1.0.0` before reinstalling. Preserve newer compatible versions.
 
 ## 3. Implement and check the app
 

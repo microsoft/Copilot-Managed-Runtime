@@ -8,6 +8,10 @@ allowed-tools: Read Grep Bash AskUserQuestion
 
 # Local Dev
 
+**Package baseline:** `@microsoft/cmr-cli` **1.0.0**. Fabric backend apps also
+require `@microsoft/cmr-apps` **1.0.0** or later with Rayfin 2 dependencies.
+See the [CMR package baseline](../../shared/development-standards.md#cmr-package-baseline).
+
 Starts `ms app dev` in the project's working directory. The CLI runs two servers — a dev script (Vite or equivalent, default port 8080) and a config server — and prints the App Player URL the user opens in their browser.
 
 This skill does NOT deploy to the cloud. For that, use `/deploy`.

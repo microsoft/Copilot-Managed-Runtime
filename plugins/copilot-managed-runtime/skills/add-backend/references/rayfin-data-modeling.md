@@ -7,10 +7,13 @@ Reference for [/add-backend](../SKILL.md).
 Rayfin's data rules belong to the installed packages. Read decorators, permissions, query APIs and
 platform constraints from disk. Paths are relative to the app root.
 Complete the entry skill's `npm install` step first.
+This workflow requires `@microsoft/cmr-apps` **1.0.0** or later and the CLI's
+Rayfin **`^2.0.0`** app dependency baseline.
 
 For each underlying Rayfin package, read `node_modules/@microsoft/<package>/package.json`, follow
 `rayfinDocs.dir`, and start with `index.md`. Then read only the relevant pages.
-Current package-doc locations:
+The paths below are documentation entry points, not a version-independent API
+contract. Use the installed package's declared docs directory if it differs.
 
 | Topic | Installed documentation |
 | --- | --- |
@@ -45,8 +48,13 @@ Keep the existing managed app layout, authentication and transport boundary.
 
 Declare `@microsoft/rayfin-core` directly when entity code imports it.
 Preserve the scaffolded SDK dependencies. Match direct Rayfin dependencies to the
-installed client version and rerun the app's package-manager install after
-changing its manifest.
+installed packages' compatible ranges and peer requirements, and rerun the app's
+package-manager install after changing its manifest. The CLI 1.0.0 scaffold adds
+`rayfin-client`, `rayfin-auth`, `rayfin-auth-provider-fabric` and `rayfin-core` in
+the `@microsoft` scope with `^2.0.0` ranges. Add any service-owning package used by
+app code (such as `@microsoft/rayfin-data`) as a direct compatible dependency.
+Do not force all packages to an identical resolved version or mix preserved 1.x
+dependencies with the Rayfin 2 helper; report and resolve compatibility gaps first.
 
 ## Step 2: Write entity files
 
@@ -77,8 +85,18 @@ Include relationship and join entities used by the app. Browser code must use
 
 ## Step 4: Initialize through Copilot Managed Runtime
 
-Use `initializeRayfin<AppSchema>()` from `@microsoft/cmr-apps/rayfin`,
-following the installed adapter docs and declarations. Reuse the resulting client
+Use `initializeRayfin({ services: { ... } })` from `@microsoft/cmr-apps/rayfin`,
+following the installed **1.0.0 or later** adapter docs and declarations.
+Register the required service factories from their owning Rayfin 2 packages in
+`services`; pass `AppSchema` to the data service factory as its installed
+declarations require, not as the generic argument to `initializeRayfin`.
+Read the installed `@microsoft/rayfin-data` docs for the factory name and signature;
+do not reuse a Rayfin 1.x client example. Calling the helper without services
+creates an auth-only client, not a data client.
+
+The helper selects `browserSession` from `@microsoft/rayfin-auth` and installs the
+host-brokered token through `@microsoft/rayfin-auth-provider-fabric`.
+Reuse the resulting client
 for data operations and authentication; do not use standalone Rayfin configuration
 or a separate Fabric sign-in flow.
 

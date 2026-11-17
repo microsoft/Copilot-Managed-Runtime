@@ -13,6 +13,11 @@ allowed-tools: Read Edit Write Grep Glob Bash AskUserQuestion EnterPlanMode Exit
 
 # Create a Microsoft App
 
+**Package baseline:** this workflow targets `@microsoft/cmr-cli` **1.0.0** and the CMR
+**1.0.0** app package baseline. Backend apps also require `@microsoft/cmr-apps`
+**1.0.0** or later. See [CMR package baseline](../../shared/development-standards.md#cmr-package-baseline);
+verify installed versions before continuing if registry tags lag behind the release.
+
 This skill scaffolds a new Microsoft App end-to-end using `@microsoft/cmr-cli` (binary `ms`). The default outcome is a **running local dev server**, not a deployed cloud app. Deploying is a separate, explicit user choice via `/deploy`.
 
 ## Workflow
