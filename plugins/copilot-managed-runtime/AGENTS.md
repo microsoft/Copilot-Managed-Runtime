@@ -50,7 +50,7 @@ This plugin uses a memory bank (`memory-bank.md`) to persist state across sessio
 | Skill          | Wraps                                            |
 | -------------- | ------------------------------------------------ |
 | `/dev`         | `ms app dev` (local App Player, hot reload).     |
-| `/deploy`      | `ms app deploy` (default) plus optional `ms app build` / `ms app build-status` traceability flow. |
+| `/deploy`      | `ms app deploy`; standalone `ms app build` / `ms app build-status` only for explicit requests or diagnostics. |
 | `/play`        | `ms app play` — open live or preview URL in browser. |
 | `/share`       | `ms app share` / `unshare`.                      |
 | `/share-link`  | `ms app share link create` / `list` / `revoke`.  |

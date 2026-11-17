@@ -91,12 +91,13 @@ Each command runs `ms app add data-source --connector <api-id>` against the righ
 /deploy
 ```
 
-Two paths. Your copilot will ask which you want:
-
-- **Local-built**: `npm run build`, then `git add -A && git commit && git push`, then `ms app deploy`.
-- **Cloud-built**: `git add -A && git commit && git push`, then `ms app deploy --commit <sha>`.
+Your copilot verifies the local build with `npm run build`, commits and pushes the changes,
+then runs `ms app deploy --commit <sha>` to build and deploy the pushed commit. There is no
+deploy-path selection question. Standalone `ms app build` / `ms app build-status` commands
+are used only when explicitly requested or needed for diagnostics.
 
 Always confirms before deploying, and always syncs changes to git before deploy.
+After deployment, it returns the live URL without asking whether to open it.
 
 ### Resuming a Session
 
