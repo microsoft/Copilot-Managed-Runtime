@@ -29,7 +29,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
-    "@microsoft/cmr-cli": "0.33.0",
+    "@microsoft/cmr-cli": "1.0.0",
     "@microsoft/cmr-apps-vite-plugin": "^1.0.0",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^24.12.3",
