@@ -1,6 +1,6 @@
 ---
 name: deploy
-description: Ships a Microsoft App to the cloud. Use when the user asks to deploy via `ms app deploy` (with optional build-status traceability flow).
+description: Ships a Microsoft App to the cloud via `ms app deploy`. Use when the user asks to deploy; standalone build/status commands are only for explicit requests or diagnostics.
 allowed-tools: Read Edit Write Grep Glob Bash AskUserQuestion
 ---
 
@@ -14,7 +14,7 @@ Before any deploy, sync source control first: stage all changes, create a commit
 
 ## Workflow
 
-1. Memory Bank → 2. Verify Project + Env → 3. Pick Path → 4. Shared Connection Policy Preflight → 5. Build Verification → 6. Git Sync (Add + Commit + Push) → 7. Confirm + Deploy → 8. Update Memory Bank
+1. Memory Bank → 2. Verify Project + Env → 3. Use Default Deploy Flow → 4. Shared Connection Policy Preflight → 5. Build Verification → 6. Git Sync (Add + Commit + Push) → 7. Confirm + Deploy → 8. Update Memory Bank
 
 ---
 
@@ -33,16 +33,12 @@ $BIN auth status                                         # must report the expec
 
 If auth is stale or the wrong account, stop and have the user run `$BIN auth login`.
 
-### Step 3: Pick a Deploy Path
+### Step 3: Use the Default Deploy Flow
 
-Ask the user which path:
-
-| Path                                        | When                                                                                                   |
-| ------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| **Standard deploy** (`ms app deploy [--commit <sha>]`) | Default. Use for normal release flow. `--commit` defaults to `git rev-parse HEAD`. |
-| **Traced deploy** (`ms app build` + `ms app build-status` + `ms app deploy`) | Use when the user needs explicit build-id tracking before deploy. |
-
-`ms app build -c <sha>` + `ms app build-status -o <build-id>` is a third (older) two-step variant for the cloud-built path. The `build` subcommand is marked deprecated in the CLI source but still works; use it only when the user wants an explicit build-id to track. Otherwise, `ms app deploy` is the single-step replacement.
+Default to `ms app deploy`, which builds and deploys the pushed commit. Do not ask the user to
+choose between standard and traced deployment. Run standalone `ms app build` or
+`ms app build-status` only when explicitly requested or needed for diagnostics; they are not
+prerequisites for normal deployment. The local build verification in Step 5 still applies.
 
 ### Step 4: Shared Connection Policy Preflight
 
@@ -135,28 +131,31 @@ If `git commit` reports "nothing to commit", continue to push/verify the current
 
 Wait for explicit user yes.
 
-**Standard deploy:**
+Only for explicit requests or diagnostics, run the relevant standalone command before
+deployment:
+
+```bash
+$BIN app build --commit "$DEPLOY_SHA"
+$BIN app build-status --commit "$DEPLOY_SHA"
+```
+
+`ms app build` waits for a terminal build status by default; `ms app build-status` checks the
+status for the specified commit. Neither command deploys the app or replaces the deployment
+confirmation above. Surface failures and do not proceed to deploy a failed build.
+
+Deploy the pushed commit:
 
 ```bash
 $BIN app deploy --commit "$DEPLOY_SHA"
 ```
 
-**Traced deploy with build-id traceability:**
+Capture and surface URLs and any build/deployment identifiers reported by the CLI.
 
-```bash
-$BIN app build -c "$DEPLOY_SHA"                     # returns a build-id
-$BIN app build-status -o "$BUILD_ID"                # polls until terminal state
-$BIN app deploy --commit "$DEPLOY_SHA"              # promote the built commit
-```
-
-Capture and surface any URLs / build IDs from the output.
-
-After a successful deploy, offer to open the live app:
-
-```bash
-$BIN app play                # opens the live URL in the browser
-$BIN app play --no-browser  # print URL only
-```
+After a successful deploy, return the live URL as a markdown link without asking whether to
+open it. If the deploy output does not include the live URL, obtain it with
+`$BIN app play --no-browser`. Run `$BIN app play` to open the browser only when the user
+requested it or automatic opening is the host's established behavior. Otherwise, do not
+launch the browser or add a follow-up question.
 
 If the user wants to verify the code before making it live, remind them they can preview without deploying:
 
@@ -169,7 +168,7 @@ $BIN app play --mode preview   # opens the latest code on main (no deploy needed
 If `memory-bank.md` exists:
 
 - Update "Last deployed" timestamp.
-- Record the deploy path used (standard / traced).
+- Record any standalone build/status commands used for an explicit request or diagnostics.
 - Capture the commit SHA at deploy time.
 
 If no memory bank exists, create one per [memory-bank.md](../../shared/memory-bank.md) so subsequent skills have context.

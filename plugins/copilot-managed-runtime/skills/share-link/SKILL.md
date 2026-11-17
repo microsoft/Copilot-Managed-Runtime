@@ -42,11 +42,14 @@ Both `--app` and `--environment-id` can be supplied explicitly to run from outsi
 
 ### Step 3: Mode
 
-Ask the user which operation they want if not already clear from context:
+Infer the operation from the user's request or caller-provided context. Do not ask the user
+to choose again when they already requested creating, listing or revoking a link:
 
 - **create** — generate a new share link.
 - **list** — show all active share links.
 - **revoke** — delete a share link by ID (also removes access for past redeemers).
+
+Ask one focused question only when the intended operation is missing or ambiguous.
 
 ### Step 4: Run
 
@@ -86,14 +89,18 @@ Present the table to the user. If the list is empty, tell them no share links ar
 
 #### Revoke
 
-Before running, show the user what will be revoked:
+Before running, show the app, the exact link ID (or full list for a batch), and the access
+consequences in one approval:
 
 > "About to revoke share link `<link-id>` for app `<app-name>`. Anyone who has not yet redeemed it will lose access; users who already redeemed it will have their Microsoft App Reader role removed. Continue?"
 
 Wait for explicit yes. Never auto-proceed — this removes access for all past redeemers.
+Reuse an explicit approval only for the same app and exact link ID/list in the current
+workflow; ask again if that scope changes. A batch approval covers all listed links, so
+do not ask for another confirmation for each link.
 
 ```bash
-$BIN app share link revoke --link-id <link-id>
+$BIN app share link revoke --link-id <link-id> --force
 ```
 
 Flags:
@@ -101,7 +108,7 @@ Flags:
 | Flag | Required | Description |
 | ---- | -------- | ----------- |
 | `--link-id` / `-l` | **Yes** | The 4-char lowercase hex link ID returned at creation time (e.g. `a3f1`). |
-| `--force` / `-f` | No | Skip the CLI's own confirmation prompt. **Always pass `--force` when running non-interactively** because the agent has already asked for confirmation in the previous step. |
+| `--force` / `-f` | No | Skip the CLI's own confirmation prompt. Pass it only after the explicit single-link or batch approval above, then use it to avoid a second CLI confirmation. |
 | `--app` | No | App name override. |
 | `--environment-id` / `-e` | No | Environment ID override. |
 | `--json` | No | Envelope: `{ success, appName, linkId, existed: boolean }`. |
@@ -116,7 +123,7 @@ $BIN app share link revoke --link-id a3f1 --force
 
 **Create:** Print the full share URL. Remind the user this grants read-only app access to anyone in the tenant who opens it, and that they can revoke it at any time with `ms app share link revoke --link-id <id>`.
 
-**List:** Present the table. Offer to create or revoke links from here if appropriate.
+**List:** Present the table (or state that no links are active) and finish the listing request. Do not ask whether to create or revoke links next. This does not interrupt listing used to resolve links for an already-requested revoke operation.
 
 **Revoke:**
 - `existed: true` (or non-JSON success): confirm the link is gone.
@@ -129,7 +136,7 @@ $BIN app share link revoke --link-id a3f1 --force
 | Situation | Action |
 | --------- | ------ |
 | User doesn't have the link ID for revoke | Run `ms app share link list` first to get the ID, then proceed to revoke. |
-| User wants to revoke all links at once | Run `ms app share link list --json`, extract all `appShareLinkId` values, confirm once with the full list, then `revoke --force` each ID in sequence. |
+| User wants to revoke all links at once | Run `ms app share link list --json`, extract all `appShareLinkId` values, show the app, full list and access consequences, and confirm once for the batch. Then `revoke --force` each approved ID in sequence without per-link questions. If no links exist, report that there is nothing to revoke; do not ask for approval. |
 | `ms app share link revoke` warns link not found | Not an error — the link was already gone. Tell the user and continue. |
 | Hard error (auth / app-not-found / non-zero exit) | Surface verbatim and STOP. Do not retry. |
 | User is outside a project directory | Pass `--app <name>` and `--environment-id <id>` explicitly. Both flags are optional in non-interactive mode when `ms.config.json` is present. |

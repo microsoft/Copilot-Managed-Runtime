@@ -44,9 +44,15 @@ Ask (or infer from the user's prompt):
 $BIN app list --json
 ```
 
-Pretty-print the JSON. Default columns when summarizing for the user: `displayName | appId | environmentId | version | lastModified`.
+Apply any user-supplied filters to the returned results before presenting them. The CLI
+returns everything; filtering (for example, by display-name substring) happens in this skill.
+Do not ask whether the user wants to filter.
 
-If the list is long (>20 entries), ask the user whether they want to filter (by display-name substring) before printing. The CLI itself returns everything; the filtering happens in this skill.
+Default columns: `displayName | appId | environmentId | version | lastModified`.
+Unless the user explicitly requests the complete list, show at most 20 matching apps and
+report the number shown, the total matching count, and the total returned by the CLI.
+If there are no matches, say so. When the complete list is explicitly requested, show all
+matching apps without truncation.
 
 **Show:**
 

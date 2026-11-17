@@ -50,7 +50,7 @@ This plugin uses a memory bank (`memory-bank.md`) to persist state across sessio
 | Skill          | Wraps                                            |
 | -------------- | ------------------------------------------------ |
 | `/dev`         | `ms app dev` (local App Player, hot reload).     |
-| `/deploy`      | `ms app deploy` (default) plus optional `ms app build` / `ms app build-status` traceability flow. |
+| `/deploy`      | `ms app deploy`; standalone `ms app build` / `ms app build-status` only for explicit requests or diagnostics. |
 | `/play`        | `ms app play` — open live or preview URL in browser. |
 | `/share`       | `ms app share` / `unshare`.                      |
 | `/share-link`  | `ms app share link create` / `list` / `revoke`.  |
@@ -142,7 +142,7 @@ the commands or APIs the workflow actually uses, not just the latest version.
 
 After modifying this plugin:
 
-1. Update the canonical `plugin.json` at this plugin's root, including its version.
+1. Update the canonical `plugin.json` at this plugin's root. Bump its version once per pull request, not for each commit or push; subsequent changes in the same PR keep that version.
 2. Copy its metadata to `.claude-plugin/plugin.json`, excluding only `$schema`. Keep both files as regular JSON files, never symlinks.
 3. Update the matching version and description in the repo-root `.claude-plugin/marketplace.json`. Preserve its marketplace name, plugin name, and source path.
 4. Keep the repo-root `.agents/plugins/marketplace.json` entry pointed at this same plugin directory.
