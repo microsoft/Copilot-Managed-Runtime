@@ -10,10 +10,20 @@ Apps on Copilot Managed Runtime run locally against the App Player with hot relo
 | ---------------- | -------- |
 | Scaffold         | `/create-app` |
 | Lifecycle        | `/dev`, `/deploy`, `/play`, `/share`, `/share-link`, `/delete-app`, `/list-apps` |
-| App backend database | `/add-backend` |
+| App backend database | `/add-backend` (Fabric), `/add-dataverse-backend` (Dataverse schema via MCP) |
 | Data sources     | `/add-data-source`, `/add-dataverse`, `/add-sharepoint`, `/add-excel`, `/add-office365`, `/add-office365-users`, `/add-teams`, `/add-onedrive`, `/add-azuredevops`, `/add-mcscopilot`, `/add-workiq`, `/list-connectors` |
 
 ### App backend database
+
+Use `/add-dataverse-backend` when you explicitly want to create or change
+Dataverse tables and columns. It resolves the existing app's environment,
+configures development-time MCP and verifies access without enabling clients
+or changing admin settings. Schema mutations require an approved plan;
+destructive changes require explicit impact confirmation. It then uses the
+existing `/add-dataverse` connector workflow for the app's record reads and
+writes. MCP credentials never belong in the app. Existing-table binding alone
+still uses `/add-dataverse`.
+See the [Dataverse backend workflow](skills/add-dataverse-backend/SKILL.md).
 
 Use `/add-backend` only for an explicitly requested app backend database with
 Fabric (preview, using the Rayfin runtime). The scaffold command is
@@ -125,8 +135,9 @@ The original compatibility work recorded this exception to
 The removed `user-invocable: true` field matches Claude's default, so skills remain user-invocable.
 The workflow instructions and tool permissions remain, with portable resource links.
 
-Version 2.1.6 includes `/add-backend`, bringing the current package to 22 skills.
-The recorded 2.1.4-to-2.1.5 results below cover the earlier 21-skill package.
+Version 2.1.17 adds `/add-dataverse-backend`, bringing the package to 23 skills.
+The historical client results below predate this skill; they do not establish
+live Dataverse MCP/schema compatibility.
 
 ### Package maintenance and validation
 

@@ -42,7 +42,7 @@ Remove an inherited report so the CLI can detect the agent.
 - **Confirm before ACL changes**: Before running `ms app share` or `ms app unshare`, obtain one explicit approval covering the operation, app and complete email/object-ID list. Do not ask per recipient or repeat an approval for the same scope in the current workflow. If the operation, app or recipient list changes (including corrected retry recipients), obtain a new approval. These mutate permissions on the cloud app.
 - **Confirm before `ms app delete`**: Always confirm. Never auto-`--force`, even when reading the slug from `ms.config.json`.
 - **Declare `allowedActions` for shared connections**: Before `ms app pack` or `ms app deploy`, every **shared** connection reference in `ms.config.json` (one with a non-empty `sharedConnectionId`) must declare `allowedActions`. The CLI validates this and fails the deploy otherwise. Infer the least-privilege set from what the app actually calls, propose it, and confirm with the user — see [allowed-actions.md](./allowed-actions.md).
-- **App backend work**: Follow the [Fabric feature gate](#fabric-feature-gate).
+- **Fabric app backend work**: Follow the [Fabric feature gate](#fabric-feature-gate).
 
 ### MUST NOT
 
@@ -168,6 +168,10 @@ By default, `ms app create` resolves and uses an environment automatically — p
 
 Apps on Copilot Managed Runtime run inside a sandbox. Direct HTTP calls to external APIs will fail at runtime because the sandbox does not allow arbitrary outbound network requests — only connector-proxied calls work.
 
+Development-time Dataverse organization discovery and MCP administration follow
+[/add-dataverse-backend](../skills/add-dataverse-backend/SKILL.md), outside the
+browser app. This does not permit direct HTTP or MCP calls in app runtime code.
+
 **If a connector exists for the service, use it — no exceptions.**
 
 | ❌ Never do this                           | ✅ Always do this                                            |
@@ -184,6 +188,12 @@ Apps on Copilot Managed Runtime run inside a sandbox. Direct HTTP calls to exter
 ---
 
 ## App backend database
+
+For an explicit **Dataverse schema** request, use
+[/add-dataverse-backend](../skills/add-dataverse-backend/SKILL.md): development-time
+MCP metadata changes, followed by `/add-dataverse` for connector-backed app data.
+This does not add a CLI backend provider or require the Fabric feature gate.
+Existing-table binding alone remains `/add-dataverse`.
 
 Select `/add-backend` only for an explicit app backend database request
 (including `/add-backend`, Fabric or Rayfin).

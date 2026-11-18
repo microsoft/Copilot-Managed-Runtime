@@ -10,6 +10,13 @@ allowed-tools: Read AskUserQuestion Skill
 
 This skill is a thin wrapper. Use `/add-data-source` as the single implementation path.
 
+For an explicit request to create or change Dataverse tables or columns, use
+[/add-dataverse-backend](../add-dataverse-backend/SKILL.md) first. It manages
+development-time metadata through MCP and returns here for app data access.
+Do not invoke schema authoring for a request that only binds existing tables.
+If `/add-dataverse-backend` invokes this wrapper after verifying metadata,
+continue with binding; do not delegate back.
+
 ## Delegation contract
 
 Invoke `/add-data-source` with:
