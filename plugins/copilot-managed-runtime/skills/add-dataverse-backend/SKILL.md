@@ -43,9 +43,14 @@ registration or the first accessible organization merely because it exists.
 A connector-only reference can have empty `dataSets`; no table binding is
 required to discover the organization.
 
-Default to the app's environment. If the user explicitly requests another
-Dataverse environment, resolve and confirm that target separately, retain its
-ID for the connector handoff, and keep the app environment unchanged.
+**One environment for metadata and records:** the MCP organization must resolve
+to the app's configured `environmentId`, and the CLI-written Dataverse binding
+must persist that same target in `ms.config.json`. Follow the
+[environment lock checks](./references/mcp-setup.md#persist-and-check-the-environment-lock).
+An existing MCP registration for another environment is a conflict, not a new
+source of truth. Stop and ask to align MCP with this app or use an app configured
+for the intended environment. Never hand-edit `environmentId` to make the check
+pass; changing a local ID does not move the registered app.
 Stop on missing Dataverse, conflicting targets, inaccessible discovery or an
 ambiguous match. Do not provision a database or guess a URL.
 
@@ -61,6 +66,8 @@ Check client enablement read-only, then authenticate in the actual MCP host,
 initialize the server, inspect its live tools and perform a harmless metadata
 read. A saved config, successful sign-in, allow-list row or validation of a
 different client's identity is not proof of working MCP access.
+Check the host's effective loaded server, including configuration overrides,
+against the environment lock; inspecting only the file just written is insufficient.
 
 Do not enable clients, grant admin consent, modify environment settings or
 install another plugin's entire toolchain automatically. A 401/403 or policy
@@ -69,6 +76,11 @@ If the host needs reload/restart or user sign-in, pause and resume this step;
 do not claim its tools are already callable.
 
 ## 3. Agree and apply the metadata plan
+
+Recheck the environment lock before every metadata mutation, including after
+a reload, sign-in or config change. Validate any existing affected table
+bindings before changing their schema. A new table may not have a binding yet,
+but its MCP target must still match the app's configured environment.
 
 Before any mutation, show the target organization and proposed tables,
 columns, types, required fields, relationships, publisher prefix and solution
@@ -113,18 +125,25 @@ After metadata verification, invoke
 
 - `api-id=shared_commondataserviceforapps`;
 - `mode=table` and the verified table logical names for a fixed schema;
-- the caller's connection selection and, only for an explicitly selected
-  different Dataverse environment, `dataverse-environment-id`.
+- the caller's connection selection and
+  `dataverse-environment-id=<environmentId from ms.config.json>`, explicitly
+  fixing the binding to the same environment used by MCP.
 
 The resulting CLI command for each fixed table is:
 
 ```bash
-ms app add data-source --connector shared_commondataserviceforapps --as table --table "<actual-logical-name>"
+ms app add data-source --connector shared_commondataserviceforapps --as table --table "<actual-logical-name>" --dataverse-environment-id "<app-environment-id>"
 ```
 
-Do not pass `--dataset`. Preserve action mode when the app intentionally
-selects organizations or entity sets at runtime; do not add a fixed table or
-`--dataverse-environment-id` in that mode.
+Do not pass `--dataset`. Use a fixed table binding for this environment-locked
+backend. An action-only reference with a runtime-selected organization does not
+establish that lock; the generic `/add-dataverse` action workflow remains
+available separately, without this same-environment guarantee.
+
+Read `ms.config.json` back after binding and after every refresh. Verify the
+selected reference's persisted environment/table metadata and effective dataset
+URL using the environment lock checks. Stop on a missing or mismatched binding;
+do not report app data access as configured or repair generated config by hand.
 
 For an existing binding affected by schema edits, run
 `ms app refresh data-source --help`, select the affected reference using its
@@ -143,9 +162,15 @@ Preserve the canonical workflow's connection validation and least-privilege
 Run the app's normal build. Verify the requested UI/data behavior using the
 generated services; live writes need an approved test-data scope.
 Development-time MCP success does not prove runtime connector permissions.
-Use `/dev` for local iteration, not an automatic deploy.
+Recheck the effective configuration before `/dev` and again before handoff.
+Use `/dev` for local iteration, not an automatic deploy. Once the app is running,
+perform a minimal read through the selected generated service as the intended app user
+or approved connection identity. Verify access to the locked environment
+separately from MCP; never grant permissions or substitute a different identity
+to make the check pass.
 
-Report the resolved target, MCP configuration scope and actual verification,
+Report the shared environment ID, matching MCP organization URL and persisted
+Dataverse binding paths in `ms.config.json`, MCP scope and actual verification,
 schema changes, logical names, generated service paths and remaining blockers.
 If `memory-bank.md` exists, record these non-secret facts and pending shared
 connection policy. Never store tokens. Distinguish configuration saved,

@@ -36,7 +36,7 @@ Python SDK.
    for government, China, test or preproduction environments.
 4. Follow any returned pagination links only within the authenticated
    discovery origin, never forwarding a bearer token to another host.
-   Match `EnvironmentId` exactly to the selected environment ID (GUID casing
+   Match `EnvironmentId` exactly to `ms.config.json.environmentId` (GUID casing
    is immaterial), `TenantId` to the verified tenant and require an enabled
    organization (`State = 0`). Do not match by display name or organization `Id`.
 5. Require one unambiguous organization and retain both `Url` (organization
@@ -44,9 +44,12 @@ Python SDK.
    organization `Url`, without a trailing slash, plus `/api/mcp`.
    Preserve the returned hostname: do not remove or add `.api` heuristically.
 
-If existing table bindings identify another organization, surface the conflict
-and confirm which binding/target is intended before modifying anything.
-Do not overwrite existing connections or re-target the app implicitly.
+If an existing MCP registration or an affected table binding identifies another
+organization, stop before metadata changes and surface the mismatch. Align
+the selected MCP server/binding with the app's configured environment through
+the supported workflows, with approval for replacing existing configuration.
+Do not overwrite unrelated connections or re-target the registered app by
+editing its local environment ID.
 
 No match is not proof that the app needs a new environment: discovery can
 omit inaccessible organizations and delegated-admin access. Explain whether
@@ -54,6 +57,51 @@ discovery failed, access was denied or no linked Dataverse organization was
 found. An administrator can supply authoritative environment details, but
 verify that their environment ID, tenant and URL agree before continuing.
 Never provision Dataverse or choose another environment as a fallback.
+
+## Persist and check the environment lock
+
+The app and MCP configuration must describe **one authoritative environment**.
+Keep that environment in the supported fields of `ms.config.json`, not only in
+MCP settings, the memory bank or session variables:
+
+| Location | Required agreement |
+| --- | --- |
+| `ms.config.json.environmentId` | Equals the discovered organization `EnvironmentId`; tenant and cloud also match the verified target. |
+| Effective MCP registration | Its organization URL and `/api/mcp` endpoint map to that same discovery result. |
+| Selected `connectionReferences` entry | Uses `shared_commondataserviceforapps`; the CLI-written table binding targets that same environment and the intended logical table. |
+
+Use the existing
+[configuration schema](https://github.com/microsoft/Copilot-Managed-Runtime/blob/main/schemas/ms.config.schema.json)
+and the CLI to persist bindings. Do not invent top-level `orgUrl`, `mcpUrl` or
+environment properties, or manually add binding fields to pretend a connection
+was created.
+
+After adding or refreshing each affected table, require at least one verifiable
+fixed binding and check every representation of that table in the actual config:
+
+- A `dataverseTables` entry's `environmentId`
+  must equal the app's `environmentId`; verify `logicalName` and, when present,
+  `entitySetName` against the schema read through MCP.
+- A `dataSets` mapping's dataset URL must identify the
+  discovered organization's `ApiUrl`, and the table mapping must match the
+  verified logical/entity-set names. Organization and API hostnames can differ;
+  compare their authoritative discovery association, not raw hostname equality.
+- When both forms are present, both must agree. Resolve active stage/overlay
+  values and `datasetOverride.environmentVariableName` before comparison.
+  An override selecting another organization or an unresolved target is a
+  blocker even when the base JSON appears correct.
+
+A new table does not need an existing binding for discovery/creation, but the
+workflow is incomplete until its CLI-written fixed binding is present and
+verified. An action-only reference with empty `dataSets` and a runtime-supplied
+organization URL is not persisted proof of this invariant. Do not silently use
+that action to read from another environment.
+
+Repeat these checks before metadata mutations, after bind/refresh, on resuming
+the workflow and before app verification. If the config, active server or
+identity changes, discard the previous check and revalidate. Report the two
+targets and the required correction on a mismatch; do not continue on a warning.
+Leave unrelated bindings untouched.
 
 ## Check enablement without changing permissions
 

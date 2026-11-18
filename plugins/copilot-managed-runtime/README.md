@@ -23,6 +23,10 @@ destructive changes require explicit impact confirmation. It then uses the
 existing `/add-dataverse` connector workflow for the app's record reads and
 writes. MCP credentials never belong in the app. Existing-table binding alone
 still uses `/add-dataverse`.
+The app's `ms.config.json` is the environment source of truth: MCP and the
+persisted Dataverse table bindings must resolve to that same environment.
+Mismatches block metadata changes and app verification rather than silently
+reading or editing another organization's data.
 See the [Dataverse backend workflow](skills/add-dataverse-backend/SKILL.md).
 
 Use `/add-backend` only for an explicitly requested app backend database with
