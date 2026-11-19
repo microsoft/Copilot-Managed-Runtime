@@ -7,6 +7,7 @@ This file provides instructions for assistants working on the Copilot Managed Ru
 The Copilot Managed Runtime plugin wraps `@microsoft/cmr-cli` (binary `ms`) to scaffold, develop, and ship apps on Copilot Managed Runtime end-to-end. It provides skills for:
 
 - Creating a new app (`/create-app`) — global install of the CLI, scaffold, local dev loop.
+- Onboarding existing code (`/init-app`) — native Git registration, integration checks, local dev without replacement scaffolding.
 - Iterating locally (`/dev`) — `ms app dev`, hot reload against the App Player.
 - Lifecycle ops (`/deploy`, `/share`, `/delete-app`, `/list-apps`).
 - Defining an app backend database (`/add-backend`) — entities and a typed runtime client.
@@ -39,11 +40,12 @@ This plugin uses a memory bank (`memory-bank.md`) to persist state across sessio
 
 ## Skills
 
-### Stage 1: scaffold
+### Stage 1: create or onboard
 
 | Skill         | What it does                                                  |
 | ------------- | ------------------------------------------------------------- |
 | `/create-app` | Installs the CLI globally, scaffolds, ends on `ms app dev`.   |
+| `/init-app` | Uses `ms app init --repo native` for existing code; preserves source and verifies integration before local dev. |
 
 ### Stage 2: lifecycle
 
@@ -98,7 +100,16 @@ All Fabric backend work requires the [Fabric feature gate](shared/shared-instruc
    └── /add-data-source (or a specific connector skill)
    └── /deploy (explicit, requires confirmation)
    └── /share, /delete-app (explicit, require confirmation)
+
+/init-app (existing code; native platform-managed Git)
+   └── /dev (after integration and build verification)
+   └── /deploy (only when requested, requires confirmation)
 ```
+
+For an existing app without CMR configuration, route to `/init-app`, not a new
+template. Preserve and approve any existing-remote changes before native init
+configures `origin`. Do not reinitialize registered apps or assume registration
+migrates runtime dependencies and connector bindings.
 
 ### Skill structure
 

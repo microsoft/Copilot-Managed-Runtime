@@ -9,9 +9,26 @@ Apps on Copilot Managed Runtime run locally against the App Player with hot relo
 | Command category | Includes |
 | ---------------- | -------- |
 | Scaffold         | `/create-app` |
+| Existing app onboarding | `/init-app` |
 | Lifecycle        | `/dev`, `/deploy`, `/play`, `/share`, `/share-link`, `/delete-app`, `/list-apps` |
 | App backend database | `/add-backend` |
 | Data sources     | `/add-data-source`, `/add-dataverse`, `/add-sharepoint`, `/add-excel`, `/add-office365`, `/add-office365-users`, `/add-teams`, `/add-onedrive`, `/add-azuredevops`, `/add-mcscopilot`, `/add-workiq`, `/list-connectors` |
+
+### Bring an existing app
+
+Run `/init-app` from an existing web app, cloned sample or exported project's root.
+It uses `ms app init --repo native` to register the app and configure a
+platform-managed Git repository **without scaffolding over the existing code**.
+It inspects build settings, gets approval for existing-remote changes, verifies
+runtime integration and the build, and starts local development. The workflow
+requires CLI **1.0.0+**, Node.js **24.11.0+**, Git **2.27.0+** and Git Credential
+Manager.
+
+Use `/create-app` only for a new app from a template. For an already registered
+app, use `/dev` or `/deploy`; do not rerun init. A first-time `/deploy` request
+for unregistered existing code routes through `/init-app`, then resumes deployment
+with explicit confirmation. Registration itself does not migrate SDKs, connector
+bindings or server-dependent frameworks, and does not deploy the app.
 
 ### App backend database
 
@@ -46,7 +63,7 @@ for the CLI, SDK, common package and Vite plugin versions.
 - [Claude Code](https://code.claude.com/docs/en/getting-started) or [GitHub Copilot CLI](https://github.com/features/copilot/cli/)
 - Access to a Copilot Managed Runtime-enabled tenant and an available release of [`@microsoft/cmr-cli`](https://www.npmjs.com/package/@microsoft/cmr-cli) on the public npm registry.
 
-The `/create-app` skill handles the global install of `@microsoft/cmr-cli@latest` on its own — you don't need to set that up by hand.
+The `/create-app` and `/init-app` skills handle the global install of `@microsoft/cmr-cli@latest` — you don't need to set that up by hand. `/init-app` enforces the CLI's Node.js 24.11.0+ requirement.
 
 ## Install the plugin
 
@@ -125,7 +142,7 @@ The original compatibility work recorded this exception to
 The removed `user-invocable: true` field matches Claude's default, so skills remain user-invocable.
 The workflow instructions and tool permissions remain, with portable resource links.
 
-Version 2.1.6 includes `/add-backend`, bringing the current package to 22 skills.
+The current package includes 23 skills, including `/add-backend` and `/init-app`.
 The recorded 2.1.4-to-2.1.5 results below cover the earlier 21-skill package.
 
 ### Package maintenance and validation
@@ -216,15 +233,15 @@ Do not use the historical commands below to install or update this repository's 
 The following matrix and captured results describe `microsoft/Managed-Apps`,
 marketplace `Managed-Apps`, and plugin `microsoft-managed-apps` on 2026-10-26.
 They are retained as historical evidence only, not results for this repository's new identity.
-The 22-skill requirements were added after those 21-skill checks.
+The current 23-skill requirements were added after those 21-skill checks.
 
 | Client and scenario | Required result | Current evidence |
 | --- | --- | --- |
-| Claude Code, fresh install | 22 skills, architect, both hooks, resource links, daily version check, selected model, `/create-app`, and one `/add-*`. | Pending. Claude is not installed on the implementation machine. |
+| Claude Code, fresh install | 23 skills, architect, both hooks, resource links, daily version check, selected model, `/create-app`, `/init-app`, and one `/add-*`. | Pending. Claude is not installed on the implementation machine. |
 | Claude Code, upgrade from 2.1.4 | Same components after update, without reinstalling. Existing marketplace and plugin identities remain. | Pending. |
-| Copilot CLI, fresh install on Windows | 22 skills, architect from `com.github.copilot`, both hooks, resource links, daily version check, and user attribution overrides. | Earlier local marketplace installation and discovery passed for 21 skills. Runtime agent and hook loading remain pending. |
+| Copilot CLI, fresh install on Windows | 23 skills, architect from `com.github.copilot`, both hooks, resource links, daily version check, `/init-app`, and user attribution overrides. | Earlier local marketplace installation and discovery passed for 21 skills. Runtime agent and hook loading remain pending. |
 | Copilot CLI, upgrade from 2.1.4 on Windows | Same components and identity after update, without reinstalling. | Local marketplace changed from 2.1.4 to 2.1.5 with the same 21 skill names and one `Managed-Apps` registration. Git-backed update and runtime checks remain pending. |
-| Codex, fresh install | 22 skills, resolved shared resources, representative CLI attribution, and documented absence of bundled agents/hooks. | Pending. Codex is not installed on the implementation machine. |
+| Codex, fresh install | 23 skills, resolved shared resources, `/init-app`, representative CLI attribution, and documented absence of bundled agents/hooks. | Pending. Codex is not installed on the implementation machine. |
 | Windows and Linux client flows | Fresh and upgrade results agree across platforms. | Windows local discovery evidence only. Both CI platforms are configured. Linux client flows remain pending. |
 | Activation and updates | Disable and enable without reinstalling. No duplicate identity. Malformed or drifted compatibility files fail CI. | Negative package checks pass locally. Activation remains pending because the installed CLI rejects the documented enable/disable subcommands. |
 
@@ -285,7 +302,11 @@ Repeat with `MS_CLI_ORIGIN=review/custom` already set and confirm that the hook 
 Check that the native Copilot entry point also sets `MS_PLUGIN_REPORT_AGENT=github-copilot`.
 Check that shared hooks remove inherited reports, even when agent environment markers exist.
 Check session-start guidance and the daily version-check instructions.
-Run `/create-app` and a representative `/add-*` only in an authorized test environment.
+Run `/create-app`, `/init-app` and a representative `/add-*` only in an authorized test environment.
+For `/init-app`, cover existing code without Git, an existing `origin` preserved
+with approval, and an already registered app that must not be initialized again.
+Verify that onboarding preserves source and behavior, native Git is configured,
+local preview works, and no deployment occurs without explicit confirmation.
 For Codex, verify the documented instruction-based attribution instead of expecting a hook.
 Attach client versions, commands, and sanitized results to the PR before claiming full runtime compatibility.
 

@@ -32,6 +32,13 @@ This skill scaffolds a new Microsoft App end-to-end using `@microsoft/cmr-cli` (
 
 Check for `memory-bank.md` per [shared-instructions.md](../../shared/shared-instructions.md). If found, infer whether to resume or create a new app from the request: resume when it refers to the existing app or incomplete work; create a new sibling project when it clearly describes a different app. State the choice and continue. Ask only when the request genuinely fits both paths and choosing incorrectly could overwrite or modify existing work.
 
+**Existing-code onboarding is not scaffolding.** If the user wants to bring an
+existing web app, cloned sample or exported project to Copilot Managed Runtime
+and it has no CMR configuration, invoke [/init-app](../init-app/SKILL.md) instead.
+Use `ms app init --repo native` in that app's root; do not use `ms app create`,
+change repository mode, or create a sibling/child template as a workaround.
+The directory-selection rules below apply only when the user wants a **new app**.
+
 ### Step 2: Validate Prerequisites
 
 Run prerequisite checks **first** — no point gathering requirements if the environment isn't ready. Full details in [prerequisites-reference.md](./references/prerequisites-reference.md).

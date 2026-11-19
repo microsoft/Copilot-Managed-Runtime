@@ -31,7 +31,7 @@ Do not downgrade newer compatible versions.
 
 ## CLI Install
 
-- **Install `@microsoft/cmr-cli` globally**, never per-workspace, so the `ms` binary is on PATH and the per-app workspace stays clean.
+- **Install `@microsoft/cmr-cli` globally**, never manually per-workspace, so the `ms` binary is on PATH. Preserve the project-local CLI pin that `ms app create` / `ms app init` writes automatically; it is not a request for a second manual installation.
 - Install command:
   ```bash
   npm install -g @microsoft/cmr-cli@latest

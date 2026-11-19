@@ -84,7 +84,7 @@ Update after:
 
 | Scenario                    | Action                                                                            |
 | --------------------------- | --------------------------------------------------------------------------------- |
-| Memory bank doesn't exist   | Create it after the first major step (e.g., after `ms app create` succeeds).      |
+| Memory bank doesn't exist   | Create it after the first major step (e.g., after `ms app create` or `ms app init` succeeds). |
 | Memory bank exists          | Update it — preserve existing content, add new information.                       |
 | Continuing previous session | Read first, then update as you progress.                                          |
 
@@ -129,6 +129,17 @@ Update after:
 - [x] `npm install && npm run build` succeeded
 - [x] `ms app dev` running locally
 - App Player URL: [URL]
+
+### /init-app (existing-code onboarding, when applicable)
+- [x] Existing project root, build settings and runtime compatibility inspected
+- [x] Prerequisites and active CLI account verified
+- [x] Native Git plan and existing-remote changes approved
+- [x] `ms app init --repo native` succeeded; config and native Git setup verified
+- Preserved source remote: [REMOTE_NAME / URL, if applicable]
+- Current branch: [BRANCH]
+- Build command / output / entry point: [VALUES]
+- [ ] Required runtime or connector migration completed
+- [ ] Existing build and local App Player behavior verified
 
 ## Created Resources
 

@@ -1,7 +1,7 @@
 ---
 name: deploy
 description: Ships a Microsoft App to the cloud via `ms app deploy`. Use when the user asks to deploy; standalone build/status commands are only for explicit requests or diagnostics.
-allowed-tools: Read Edit Write Grep Glob Bash AskUserQuestion
+allowed-tools: Read Edit Write Grep Glob Bash AskUserQuestion Skill
 ---
 
 **📋 Shared Instructions: [shared-instructions.md](../../shared/shared-instructions.md)** — Cross-cutting concerns. **Always confirm before deploy.**
@@ -23,6 +23,14 @@ Before any deploy, sync source control first: stage all changes, create a commit
 Read `memory-bank.md` for app slug, GUID, and environment.
 
 ### Step 2: Verify Project + Env
+
+Locate the existing app root first. If it has application code but no CMR
+configuration, invoke [/init-app](../init-app/SKILL.md) to onboard it with native
+Git, forwarding the original deployment request. Resume this workflow after
+onboarding and verification; the deployment confirmation below still applies.
+Do not use `ms app create` to replace existing code or delete an existing config
+to rerun init. If another CMR config layout exists, verify CLI support rather
+than registering a duplicate app.
 
 ```bash
 test -f ms.config.json || { echo "Not in a Microsoft App workspace."; exit 1; }

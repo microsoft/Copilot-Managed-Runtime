@@ -53,6 +53,21 @@ If the folder is not empty, the skill will create the app in an inferred subfold
 
 Nothing deploys to the cloud at this point — local dev only.
 
+### Already Have an App?
+
+Open the existing web app's root instead of an empty folder and run:
+
+```
+/init-app
+```
+
+This registers your existing code with `ms app init --repo native`, configures a
+platform-managed Git repository, verifies integration and the build, and starts
+local development without replacing your app with a template. It asks for approval
+before changing an existing `origin`. This workflow requires Node.js **24.11.0+**,
+Git **2.27.0+** and Git Credential Manager. It does not deploy.
+If the app already has CMR configuration, use `/dev` or `/deploy` instead.
+
 ---
 
 ## Dive Deeper
@@ -101,7 +116,7 @@ After deployment, it returns the live URL without asking whether to open it.
 
 ### Resuming a Session
 
-After the first `ms app create`, the project folder gets a `memory-bank.md`. Open a new copilot session in the same folder and your copilot reads it to pick up where you left off (including which environment + cluster).
+After `/create-app` or `/init-app`, the project folder gets a `memory-bank.md`. Open a new copilot session in the same folder and your copilot reads it to pick up where you left off (including which environment + cluster).
 
 ### Troubleshooting
 

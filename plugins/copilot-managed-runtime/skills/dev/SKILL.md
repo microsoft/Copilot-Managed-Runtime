@@ -1,7 +1,7 @@
 ---
 name: dev
 description: Runs a Microsoft App locally with hot reload via `ms app dev`. Use when starting or restarting local development and surfacing the App Player URL.
-allowed-tools: Read Grep Bash AskUserQuestion
+allowed-tools: Read Grep Bash AskUserQuestion Skill
 ---
 
 **📋 Shared Instructions: [shared-instructions.md](../../shared/shared-instructions.md)** — Cross-cutting concerns.
@@ -29,6 +29,12 @@ Read `memory-bank.md` from the project root (the project the user has `cd`'d int
 `ms app dev` does **not** need `environmentId` or `appId` passed to it: it runs in the project working directory and reads `ms.config.json` itself. The memory bank is only for orienting yourself; if it's missing, that's fine — skip straight to Step 2.
 
 ### Step 2: Verify Project + Env
+
+Locate the app root before checking configuration. If this is existing web app
+code that has not been registered with CMR, invoke [/init-app](../init-app/SKILL.md)
+and resume here after onboarding. Do not scaffold a replacement app or rerun init
+when CMR configuration already exists. If no app can be identified, report that
+the project root is required and stop.
 
 ```bash
 test -f ms.config.json || { echo "Not in a Microsoft App workspace (no ms.config.json)."; exit 1; }
@@ -102,7 +108,7 @@ If the dev server prints an error during startup (port conflict, missing `ms.con
 | Error                                                | Fix                                                                                         |
 | ---------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | `EADDRINUSE` on 8080                                  | Re-run with `$BIN app dev --port 8081` (or kill whatever's on 8080).                        |
-| `ms.config.json not found`                         | The user is in the wrong directory, or this isn't a Microsoft App workspace. Verify and stop. |
+| `ms.config.json not found`                         | Verify the app root. For existing code not yet registered with CMR, use `/init-app`; otherwise report the configuration problem and stop. |
 | `Authentication failed` (token expired)               | Run `$BIN auth login` (interactive) and retry.                                              |
 | `Failed to fetch app metadata for <app-id>`           | App was deleted in the service. Confirm with `$BIN app list --json` and restore or recreate.|
 
