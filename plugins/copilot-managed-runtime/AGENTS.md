@@ -10,6 +10,7 @@ The Copilot Managed Runtime plugin wraps `@microsoft/cmr-cli` (binary `ms`) to s
 - Iterating locally (`/dev`) — `ms app dev`, hot reload against the App Player.
 - Lifecycle ops (`/deploy`, `/share`, `/delete-app`, `/list-apps`).
 - Defining an app backend database (`/add-backend`) — entities and a typed runtime client.
+- Authoring a Dataverse backend (`/add-dataverse-backend`) — development-time MCP schema changes, then connector-backed app data access.
 - Binding data sources (`/add-dataverse`, `/add-sharepoint`, etc.) — generates typed TypeScript services under `src/`.
 
 ## Memory Bank System
@@ -77,6 +78,11 @@ This plugin uses a memory bank (`memory-bank.md`) to persist state across sessio
 
 ### App backend database
 
+**Dataverse:** `/add-dataverse-backend` resolves the existing app environment,
+configures development-time MCP, gates metadata mutations on an approved schema
+plan, and returns to `/add-dataverse` for runtime record access. Do not route an
+existing-table binding through schema authoring or apply the Fabric feature gate.
+
 **Setup:** `/add-backend` scaffolds Fabric backend configuration and code (preview) with `ms app add backend --provider fabric`; scaffolding does not provision the database. Its local references use the installed SDK docs for API guidance. Use the `fabric` feature key, but keep the Rayfin paths, packages and SDK APIs unchanged. Wait for backend setup to complete and `rayfin/rayfin.yml` to exist before starting a dev server.
 
 Select it only for an explicit app backend database request (including
@@ -95,6 +101,7 @@ All Fabric backend work requires the [Fabric feature gate](shared/shared-instruc
 /create-app
    └── /dev (default loop)
    └── /add-backend (when explicitly requested)
+   └── /add-dataverse-backend (when Dataverse schema authoring is explicitly requested)
    └── /add-data-source (or a specific connector skill)
    └── /deploy (explicit, requires confirmation)
    └── /share, /delete-app (explicit, require confirmation)
