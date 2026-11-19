@@ -17,12 +17,13 @@ Apps on Copilot Managed Runtime run locally against the App Player with hot relo
 ### Bring an existing app
 
 Run `/init-app` from an existing web app, cloned sample or exported project's root.
-It uses `ms app init --repo native` to register the app and configure a
+It uses `ms app init` to register the app and configure a
 platform-managed Git repository **without scaffolding over the existing code**.
 It inspects build settings, gets approval for existing-remote changes, verifies
 runtime integration and the build, and starts local development. The workflow
-requires CLI **1.0.0+**, Node.js **24.11.0+**, Git **2.27.0+** and Git Credential
-Manager.
+follows the shared CMR package baseline and requires Node.js **24.11.0+**,
+Git **2.27.0+** and Git Credential Manager. Omit `--repo` when no `origin` is
+detected; use `--repo native` for approved native rebinding.
 
 Use `/create-app` only for a new app from a template. For an already registered
 app, use `/dev` or `/deploy`; do not rerun init. A first-time `/deploy` request
@@ -58,12 +59,12 @@ for the CLI, SDK, common package and Vite plugin versions.
 
 ## Prerequisites
 
-- [Node.js v22+](https://nodejs.org/)
+- [Node.js 24.11.0+](https://nodejs.org/)
 - Git + Git Credential Manager
 - [Claude Code](https://code.claude.com/docs/en/getting-started) or [GitHub Copilot CLI](https://github.com/features/copilot/cli/)
 - Access to a Copilot Managed Runtime-enabled tenant and an available release of [`@microsoft/cmr-cli`](https://www.npmjs.com/package/@microsoft/cmr-cli) on the public npm registry.
 
-The `/create-app` and `/init-app` skills handle the global install of `@microsoft/cmr-cli@latest` — you don't need to set that up by hand. `/init-app` enforces the CLI's Node.js 24.11.0+ requirement.
+The `/create-app` and `/init-app` skills handle the global install of `@microsoft/cmr-cli@latest` — you don't need to set that up by hand.
 
 ## Install the plugin
 

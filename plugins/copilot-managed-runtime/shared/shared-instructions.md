@@ -35,14 +35,15 @@ Remove an inherited report so the CLI can detect the agent.
 
 - **New app from a template:** use `/create-app` and `ms app create`.
 - **Existing web app, sample or exported code without CMR configuration:** use
-  [/init-app](../skills/init-app/SKILL.md) and `ms app init --repo native` in the
+  [/init-app](../skills/init-app/SKILL.md) and `ms app init` with native Git in the
   existing app root. Preserve the application; do not scaffold a replacement or
   switch repository mode as a workaround.
 - **Already registered CMR workspace:** use `/dev` or `/deploy` as requested.
   Missing `memory-bank.md` is not a reason to register the app again.
 
 Native platform-managed Git remains the recommended onboarding path. Explain
-and approve any existing-remote changes before init. Registration alone does not
+and approve any existing-remote changes before init. Omit `--repo` when no `origin`
+is detected; use `--repo native` for approved native rebinding. Registration alone does not
 migrate SDKs, framework configuration, connectors or backends.
 
 ---

@@ -9,9 +9,9 @@ Standards that apply to all Copilot Managed Runtime skills.
 
 ## Node.js
 
-- **Node.js 22+ is required** — `@microsoft/cmr-cli` rejects older versions for codegen-bearing commands.
+- **Node.js 24.11.0+ is required** by the CMR package engine baseline. The CLI warns on unsupported versions; do not treat a successful version probe as proof of compatibility.
 - Check with `node --version` before starting.
-- If the user has multiple versions, suggest `nvm use 22`.
+- If the user has multiple versions, suggest `nvm use 24` and verify the selected patch is at least 24.11.0. Honor any stricter installed package requirement.
 
 ## CMR package baseline
 

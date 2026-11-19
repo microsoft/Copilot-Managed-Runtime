@@ -77,7 +77,7 @@ if (bad) { console.log(bad + " issue(s): fix before deploy"); process.exitCode =
 '
 ```
 
-This mirrors the CLI's own validation and works in bash and PowerShell alike (Node 22+ is a
+This mirrors the CLI's own validation and works in bash and PowerShell alike (Node 24.11.0+ is a
 project prerequisite; `jq` is not).
 
 Any `MISSING` or `INVALID` line means the deploy will fail. **Stop and fix it** rather than proceeding:

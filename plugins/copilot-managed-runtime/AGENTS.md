@@ -45,7 +45,7 @@ This plugin uses a memory bank (`memory-bank.md`) to persist state across sessio
 | Skill         | What it does                                                  |
 | ------------- | ------------------------------------------------------------- |
 | `/create-app` | Installs the CLI globally, scaffolds, ends on `ms app dev`.   |
-| `/init-app` | Uses `ms app init --repo native` for existing code; preserves source and verifies integration before local dev. |
+| `/init-app` | Uses `ms app init` with native Git for existing code; preserves source and verifies integration before local dev. |
 
 ### Stage 2: lifecycle
 
@@ -108,7 +108,8 @@ All Fabric backend work requires the [Fabric feature gate](shared/shared-instruc
 
 For an existing app without CMR configuration, route to `/init-app`, not a new
 template. Preserve and approve any existing-remote changes before native init
-configures `origin`. Do not reinitialize registered apps or assume registration
+configures `origin`; omit `--repo` when no `origin` is detected and use `--repo native`
+for approved rebinding. Do not reinitialize registered apps or assume registration
 migrates runtime dependencies and connector bindings.
 
 ### Skill structure

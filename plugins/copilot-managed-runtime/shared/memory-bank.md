@@ -134,7 +134,7 @@ Update after:
 - [x] Existing project root, build settings and runtime compatibility inspected
 - [x] Prerequisites and active CLI account verified
 - [x] Native Git plan and existing-remote changes approved
-- [x] `ms app init --repo native` succeeded; config and native Git setup verified
+- [x] `ms app init` succeeded; config and native Git setup verified (explicit `--repo native` for approved rebinding)
 - Preserved source remote: [REMOTE_NAME / URL, if applicable]
 - Current branch: [BRANCH]
 - Build command / output / entry point: [VALUES]

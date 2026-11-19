@@ -1,195 +1,163 @@
 ---
 name: init-app
-description: Onboards an existing web app to Copilot Managed Runtime with `ms app init` and a platform-managed native Git repository. Use when bringing existing code, a cloned sample, or an exported app to the platform, including first-time deployment when ms.config.json is missing. Does not scaffold a new app.
+description: Initializes an existing app on Copilot Managed Runtime using `ms app init` and native Git. Use when bringing existing code, a cloned sample or an exported app to the platform, including first-time deployment when ms.config.json is missing.
 allowed-tools: Read Edit Write Grep Glob Bash AskUserQuestion EnterPlanMode ExitPlanMode Skill
 ---
 
-**Shared Instructions: [shared-instructions.md](../../shared/shared-instructions.md)** - Cross-cutting concerns.
+**📋 Shared Instructions: [shared-instructions.md](../../shared/shared-instructions.md)** — Cross-cutting concerns.
 
-# Initialize an Existing App
+**References:**
 
-**Minimum CLI version:** `@microsoft/cmr-cli` **1.0.0**, which supports
-`ms app init --repo native` and the build/local URL flags used here.
-That release requires **Node.js 24.11.0+** and **Git 2.27.0+**, plus Git Credential
-Manager for native Git authentication. If runtime integration is needed, use
-`@microsoft/cmr-apps` and `@microsoft/cmr-apps-vite-plugin` **1.0.0** or later;
-see the [CMR package baseline](../../shared/development-standards.md#cmr-package-baseline).
+- [prerequisites-reference.md](../create-app/references/prerequisites-reference.md) — Node, Git and CLI installation.
+- [troubleshooting.md](../create-app/references/troubleshooting.md) — First-run Git Credential Manager recovery.
 
-Use this skill for **existing application code**, not a new template. Register it
-in place with `ms app init --repo native`, preserving its UI, source, framework,
-and build tooling. Native Git is the recommended onboarding path in this plugin.
-Do not use `ms app create` as a workaround: it scaffolds a template rather than
-onboarding existing code.
+# Initialize a Microsoft App
 
-The default outcome is a registered app verified in local development, **not a
-cloud deployment**. If the original request includes deployment, continue to
-`/deploy` only after onboarding and local verification, retaining its explicit
-deployment confirmation.
+**Package baseline:** this workflow targets `@microsoft/cmr-cli` **1.0.0** and the CMR
+**1.0.0** app package baseline. Backend apps also require `@microsoft/cmr-apps`
+**1.0.0** or later. See [CMR package baseline](../../shared/development-standards.md#cmr-package-baseline);
+verify installed versions before continuing if registry tags lag behind the release.
+This is the package baseline, not the version that introduced `init`.
+
+This skill registers an existing web app without scaffolding over its source.
+The default outcome is a **running local dev server**, not a deployed cloud app.
+Deploying is a separate, explicit user choice via `/deploy`.
 
 ## Workflow
 
-1. Inspect project -> 2. Prerequisites and auth -> 3. Approve onboarding plan ->
-4. Initialize -> 5. Verify integration -> 6. Local dev or deploy handoff
+1. Memory Bank → 2. Prerequisites → 3. Inspect App → 4. Plan → 5. Auth → 6. Environment → 7. Initialize → 8. Verify Integration → 9. Local Dev → 10. Summary → 11. Memory Bank Update
 
-### 1. Inspect the Existing Project
+### Step 1: Check Memory Bank
 
-Locate the app root from the user's path or the current workspace, including
-hidden files. Read `memory-bank.md` if present. Inspect `package.json`, lockfiles,
-build/dev scripts, framework configuration, output directory, HTML entry point,
-and any existing CMR or Power Apps configuration. Ask for the root only when
-multiple app candidates remain ambiguous.
+Check for `memory-bank.md` per [shared-instructions.md](../../shared/shared-instructions.md).
+Use the known project path or discover the existing app root. If CMR configuration
+already exists, resume `/dev` or `/deploy` as requested; do not delete configuration
+or rerun init. Inspect unfamiliar config layouts before creating another registration.
+Use `/create-app` only when the user wants a new app from a template.
 
-- If `ms.config.json` already exists, read it and resume `/dev` or `/deploy` as
-  requested. Do **not** delete it or rerun init to repair a failed build or Git
-  setup. If configuration is incomplete, report the specific problem.
-- If another CMR config layout is present, inspect the installed CLI's support
-  before proceeding; do not create a second app registration alongside it.
-- If there is no existing app and the user wants a new one, use `/create-app`.
-- If `power.config.json` or a different platform SDK is present, treat conversion
-  as migration, not just registration. Include the required SDK, Vite integration,
-  connector and configuration changes in the plan; do not delete the old config
-  or assume init migrates its bindings.
-- Verify that the app can produce browser-hostable assets. SSR-only apps or apps
-  requiring an arbitrary server backend need an agreed adaptation first; do not
-  promise that init converts them or silently replace their architecture.
+### Step 2: Validate Prerequisites
 
-Inspect Git status, repository root, current branch and remotes. If the app is
-inside a parent repository or a linked worktree, agree on a standalone copy
-before initializing; do not create a nested repository or change shared remotes.
-Preserve uncommitted changes and Git history.
-
-### 2. Validate Prerequisites and Auth
+Run prerequisite checks **first**, following the shared
+[prerequisites reference](../create-app/references/prerequisites-reference.md).
+Node.js **24.11.0+**, Git **2.27.0+** and Git Credential Manager are required.
 
 ```bash
 node --version
 git --version
-git credential-manager --version
 ms --version
 ```
 
-Enforce the minimum versions above and any stricter installed CLI engine
-requirement. If Node, Git or GCM is missing or incompatible, report the required
-tool and stop. If `ms` is missing, ask for approval before installing
-`npm install -g @microsoft/cmr-cli@latest`, then verify its version.
+If Node or Git is missing or unsupported, report the requirement and STOP.
+If `ms` is missing, ask before installing `npm install -g @microsoft/cmr-cli@latest`,
+then re-probe it. Otherwise run the shared
+[CLI freshness gate](../../shared/development-standards.md#cli-freshness-gate);
+reuse a calling skill's outcome rather than checking or prompting again.
+Let the CLI's native-flow preflight validate GCM installation and configured
+helpers: it supports both `manager` and `manager-core`. Do not reject an
+installation based on a single `git credential-manager --version` probe.
 
-Run the [CLI freshness gate](../../shared/development-standards.md#cli-freshness-gate)
-once, or reuse its outcome from the calling skill. If the installed CLI remains
-below the minimum, stop rather than substituting `create`. Do not manually add a
-project-local CLI dependency or use `npx ms`.
+### Step 3: Inspect the App
+
+Infer the display name and build settings from existing source, `package.json`,
+lockfiles and framework configuration. Preserve the UI, scripts, package manager
+and business logic. Inspect Git root, branch, status and remotes, including hidden
+entries. Ask only when the app root or a required setting remains ambiguous.
+For an app inside a parent repository or linked worktree, agree on a standalone
+copy before init rather than nesting repositories or changing shared remotes.
+
+Confirm the app produces browser-hostable assets. SSR/server-dependent apps need
+an agreed adaptation; init does not convert them. For Power Apps or another
+platform's SDK/configuration, identify the necessary migration and connector
+bindings instead of assuming registration migrates them.
+
+### Step 4: Plan
+
+Follow the [planning policy](../../shared/planning-policy.md). Present one plan:
+existing app root/name, build command/output/HTML entry point, local dev URL,
+native Git setup, necessary integration changes, build verification and local dev.
+Include a `/deploy` handoff only if requested. Do not redesign the app.
+
+Native platform-managed Git is the recommended path. When no `origin` is detected,
+plain `ms app init` selects native. With an existing `origin`, omission follows
+remote detection and accepts that remote in non-interactive mode. Obtain approval
+to preserve the old remote under an unused name and use `--repo native` for this
+native-rebinding case. Never discard an existing URL or change branches silently.
+If native onboarding is not approved, clarify rather than choosing another mode.
+
+### Step 5: Auth
 
 ```bash
 ms auth status
-ms app init --help
 ```
 
-Use auth status as the source of truth. If signed out, run `ms auth login`; ask
-before switching an existing signed-in account. Verify the installed command
-supports the planned flags.
+Use auth status as the source of truth. If signed out, run `ms auth login`.
+Ask before switching a signed-in account; otherwise continue.
 
-### 3. Approve the Onboarding Plan
+### Step 6: Environment
 
-Follow the [planning policy](../../shared/planning-policy.md). Infer the display
-name and build settings from the existing app and the request, rather than asking
-the user to repeat discoverable information. The plan must include:
+Run `ms app init` with no environment flags and let the CLI resolve the environment
+automatically. Pass `--environment-id <id>` only when explicitly provided by the
+user; never infer one from a memory bank or another app. Surface routing errors
+rather than attempting an environment workaround.
 
-- The existing app root and the application behavior to preserve.
-- The new app registration and **native platform-managed Git repository**.
-- Build command, output directory, HTML entry point and local development URL,
-  derived from the app's actual scripts/configuration, not assumed Vite defaults.
-- Any necessary runtime integration or migration, dependency installation,
-  local build, and the `/dev` handoff (or `/deploy` for an explicit deploy request).
+### Step 7: Initialize
 
-**Explain Git changes before running init.** `--repo native` deliberately skips
-existing-remote detection and configures the platform repository as `origin`.
-If `origin` already exists, obtain explicit approval to preserve it under an
-unused remote name (for example, `source`) before init replaces it. Do not silently
-discard the old URL, overwrite another remote, or change the user's branch.
-If the user does not approve native Git onboarding, stop and clarify the desired
-workflow rather than choosing another repository mode automatically.
-
-Let the CLI resolve the environment. Pass `--environment-id` only when explicitly
-provided by the user; never infer one from a memory bank or another app.
-
-### 4. Initialize in the App Root
-
-After approval, preserve any existing `origin` as agreed, then run in the
-**existing app root**, not a new child directory:
+From the **existing app root**, run with the inspected values, quoted for the
+active shell. Do not create a child/sibling template or substitute `ms app create`.
 
 ```bash
-ms app init --display-name "<existing-app-name>" --repo native --non-interactive --build-command "<existing-build-command>" --build-path "<existing-output-directory>" --build-entry-point "<entry-html>" --local-app-url "<existing-local-dev-url>"
+ms app init --display-name "<name>" --non-interactive --build-command "<build-command>" --build-path "<output-directory>" --build-entry-point "<entry-html>" --local-app-url "<local-dev-url>"
 ```
 
-Replace placeholders with the inspected values and quote them for the active
-shell. The build entry point is relative to the build output directory.
-Append `--environment-id <id>` only for a user-provided ID. Do not pass a template
-or scaffold replacement source files.
+For approved native rebinding, first preserve the old remote as agreed and append
+`--repo native`. Otherwise omit `--repo` when no `origin` is detected.
+The HTML entry point is relative to the output directory.
 
-Init creates the app record and writes `ms.config.json`; it also pins the CLI in
-`package.json` for build-based projects and configures native Git credentials and
-the remote. The CLI-managed pin is expected: preserve it rather than adding a
-second CLI dependency manually.
+Read `ms.config.json` back and verify app/environment IDs, `repoType: "native"`,
+repository ID and build/dev settings. Verify actual Git root, branch, `origin`
+and preserved source remote: init can warn about Git setup failure after creating
+the app. Preserve its automatic CLI pin in `package.json`.
 
-Read `ms.config.json` back. Verify `appId`, `environmentId`, `repoType: "native"`,
-`repositoryId`, and the agreed build/local URL settings. Check the actual Git
-root, branch and `origin`; do not infer successful Git setup solely from a zero
-exit code, because init can warn about a local Git setup failure after creating
-the app.
+If registration succeeded but local setup failed, keep the app/config and repair
+only that setup using the returned native remote. Do not rerun init or create a
+duplicate app. For first-run Git authentication failure, use `git fetch origin`
+per the shared troubleshooting reference, then retry the failed Git operation.
+Record the app identity and setup results in the memory bank.
 
-If registration succeeded but local setup failed, keep the app and config.
-Surface the warning and repair only that setup against the returned native
-remote; do not rerun init, delete the config, or create a second app. If the first
-Git authentication fails, use the existing
-[GCM recovery guidance](../create-app/references/troubleshooting.md#first-run-git-credential-manager-trap)
-(`git fetch origin`) and retry the failed Git operation, not app registration.
-Surface environment-routing errors instead of guessing another environment.
+### Step 8: Verify Integration
 
-Create or update `memory-bank.md` with the app identity, CLI-resolved environment,
-native remote, preserved source remote, current branch, build settings and any
-remaining setup issues.
+Init does not rewrite SDK imports, configure Vite, add connectors or migrate
+connection references. Make only the approved compatibility changes. For Vite
+runtime integration, follow installed `@microsoft/cmr-apps-vite-plugin` docs and
+use `copilotManagedRuntime()` alongside existing plugins; do not force a framework
+rewrite. Add the SDK only when app features require it.
 
-### 5. Verify Existing-App Integration
+Use matching `/add-*` skills for required data sources and `/add-backend` only
+when explicitly requested. Forward approved identifiers, project root and CLI
+freshness outcome. Preserve migrated bindings, resolve shared-connection policies
+before cloud preview/deploy, and complete backend startup prerequisites.
 
-Registration is **not** application migration: init does not rewrite SDK imports,
-configure Vite, add connectors, migrate connection references or implement a
-backend. Make only the approved compatibility changes:
+### Step 9: Build and Start Local Dev
 
-- Preserve existing scripts, lockfiles, styling, routes and business logic. Ensure
-  the app has a working `build` script and, for `/dev`, a `dev` script. Reuse its
-  package manager and existing build command; do not replace them with a template.
-- For a Vite app needing CMR runtime integration, follow the installed
-  `@microsoft/cmr-apps-vite-plugin` documentation and use `copilotManagedRuntime()`
-  alongside existing plugins. Add the SDK only when required by app features.
-  Do not force a non-Vite app into Vite just to initialize it.
-- For required external data, use the matching `/add-*` skill and generated
-  services. Pass the app root, approved identifiers and CLI freshness outcome;
-  preserve existing bindings and verify migrated calls. Apply shared-connection
-  `allowedActions` before any cloud preview or deploy.
-- For an explicitly requested Fabric/Rayfin backend, use `/add-backend` and
-  complete its startup prerequisites before starting local development.
+Restore dependencies with the existing package manager after init's manifest
+change. Run the existing build and verify the configured output/HTML entry point;
+fix or report failures before starting local dev.
 
-Install/restore dependencies using the project's package manager after init's
-manifest change. Run the existing build and verify that the configured output
-directory contains the configured HTML entry point. Surface failures; do not
-claim the app is ready or deploy while integration/build work remains incomplete.
+Invoke `/dev` with the app root and CLI freshness outcome; verify the existing app
+loads and required interactions work. If called from `/dev`, return that context
+so the caller starts it once. If called from `/deploy`, return after verification
+instead of invoking deploy recursively.
 
-### 6. Continue the Requested Workflow
+### Step 10: Summary
 
-Update the memory bank with actual results and any unresolved issues. If called
-from `/dev`, return the app root, build results and CLI freshness outcome so that
-caller can start local development once and verify the existing app.
+Report app name/GUID, project path, verified local App Player URL and blockers.
+State that **nothing has been deployed to the cloud**. Follow the shared
+Ready-to-Ship Gate when the user signals readiness, or resume `/deploy` for an
+explicit deployment request, retaining its confirmation. Do not claim completion
+while Git setup, build or runtime verification is blocked.
 
-Otherwise invoke `/dev` with that context for local App Player verification.
-Check that the existing app loads and its required interactions still work; a
-successful registration alone does not prove runtime compatibility. If called
-from `/deploy`, return to the paused deploy workflow after verification rather
-than invoking `/deploy` recursively.
+### Step 11: Update Memory Bank
 
-For a standalone invocation with an explicit deployment request, hand off to `/deploy` after verification,
-forwarding the app identity, native Git setup, build settings and original intent.
-It must sync the native repository and obtain its explicit deployment confirmation.
-Otherwise keep the default local loop and follow the shared Ready-to-Ship Gate
-only when the user signals readiness.
-
-Report the app identity, existing project path, verified local App Player URL,
-and any blockers. State clearly when nothing has been deployed. Do not label
-onboarding complete if Git setup, build, or runtime verification is still blocked.
+Create/update `memory-bank.md` per the shared template. Record app identity,
+CLI-resolved environment, native and preserved source remotes, branch, build/dev
+settings, integration changes and actual verification results.

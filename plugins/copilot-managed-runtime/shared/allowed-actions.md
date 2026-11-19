@@ -76,7 +76,7 @@ entirely. Don't add it to them.
 
 ### Detecting shared references
 
-Node 22+ is already a prerequisite for every Microsoft App, so this check runs identically in
+Node 24.11.0+ is already a prerequisite for every Microsoft App, so this check runs identically in
 bash and PowerShell (unlike `jq`, which isn't on PATH by default on Windows):
 
 ```bash

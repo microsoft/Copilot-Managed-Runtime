@@ -185,7 +185,7 @@ If policy blocks a required operation, report the restriction. Do not substitute
 when the connection's auth type is shareable, so this can trigger without the user asking for
 it — and it doesn't surface as a build error, it surfaces later as a deploy failure.
 
-**4a. Read the config back** and check the reference that was just written. Node 22+ is a
+**4a. Read the config back** and check the reference that was just written. Node 24.11.0+ is a
 project prerequisite, so this works in bash and PowerShell alike:
 
 ```bash
