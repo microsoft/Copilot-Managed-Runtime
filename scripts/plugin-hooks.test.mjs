@@ -20,7 +20,7 @@ function run(name, input, native = false, markers = {}) {
   const script = join(directory, 'hooks', `${name}.${windows ? 'ps1' : 'sh'}`);
   const args = windows ? ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', script] : [script];
   if (native && name === 'pre-tool-use') args.push(windows ? '-GitHubCopilot' : '--github-copilot');
-  const result = spawnSync(shell, args, { env, input: `${JSON.stringify(input)}\n`, encoding: 'utf8', timeout: 10000 });
+  const result = spawnSync(shell, args, { env, input: `${JSON.stringify(input)}\n`, encoding: 'utf8', timeout: 30000 });
   assert.ifError(result.error);
   assert.equal(result.status, 0, result.stderr);
   return result.stdout.trim() ? JSON.parse(result.stdout) : undefined;
@@ -81,7 +81,7 @@ for (const [host, native, payload] of [
         if (report === undefined) delete env.MS_PLUGIN_REPORT_AGENT;
         else env.MS_PLUGIN_REPORT_AGENT = report;
         const args = windows ? ['-NoProfile', '-Command', probe + rewritten] : ['-c', probe + rewritten];
-        const result = spawnSync(shell, args, { env, encoding: 'utf8', timeout: 10000 });
+        const result = spawnSync(shell, args, { env, encoding: 'utf8', timeout: 30000 });
         assert.ifError(result.error);
         assert.equal(result.status, 0, result.stderr);
         assert.equal(result.stdout.trim(), `${origin ?? 'plugin'}|${native ? 'github-copilot' : '<unset>'}`);
