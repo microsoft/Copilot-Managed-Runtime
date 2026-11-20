@@ -108,7 +108,7 @@ From the **existing app root**, run with the display name, quoted for the
 active shell. Do not create a child/sibling template or substitute `ms app create`.
 
 ```bash
-ms app init --display-name "<name>"
+ms app init --display-name "<name>" --non-interactive
 ```
 
 For approved native rebinding, first preserve the old remote as agreed and append
