@@ -1,7 +1,7 @@
 ---
 name: deploy
 description: Ships a Microsoft App to the cloud via `ms app deploy`. Use when the user asks to deploy; standalone build/status commands are only for explicit requests or diagnostics.
-allowed-tools: Read Edit Write Grep Glob Bash AskUserQuestion
+allowed-tools: Read Edit Write Grep Glob Bash AskUserQuestion Skill
 ---
 
 **📋 Shared Instructions: [shared-instructions.md](../../shared/shared-instructions.md)** — Cross-cutting concerns. **Always confirm before deploy.**
@@ -23,6 +23,14 @@ Before any deploy, sync source control first: stage all changes, create a commit
 Read `memory-bank.md` for app slug, GUID, and environment.
 
 ### Step 2: Verify Project + Env
+
+Locate the existing app root first. If it has application code but no CMR
+configuration, invoke [/init-app](../init-app/SKILL.md) to onboard it with native
+Git, forwarding the original deployment request. Resume this workflow after
+onboarding and verification; the deployment confirmation below still applies.
+Do not use `ms app create` to replace existing code or delete an existing config
+to rerun init. If another CMR config layout exists, verify CLI support rather
+than registering a duplicate app.
 
 ```bash
 test -f ms.config.json || { echo "Not in a Microsoft App workspace."; exit 1; }
@@ -69,7 +77,7 @@ if (bad) { console.log(bad + " issue(s): fix before deploy"); process.exitCode =
 '
 ```
 
-This mirrors the CLI's own validation and works in bash and PowerShell alike (Node 22+ is a
+This mirrors the CLI's own validation and works in bash and PowerShell alike (Node 24.11.0+ is a
 project prerequisite; `jq` is not).
 
 Any `MISSING` or `INVALID` line means the deploy will fail. **Stop and fix it** rather than proceeding:
@@ -98,7 +106,7 @@ Failure handling per [shared-instructions.md](../../shared/shared-instructions.m
 - Module not found: `npm install` and retry once.
 - Other non-zero exit: report verbatim, STOP.
 
-Verify the build output directory (`./dist` by default, or whatever `--build-path` resolved to during `ms app create`) is populated before continuing.
+Verify the build output directory (`./dist` by default, or the app's configured `buildPath`) is populated before continuing.
 
 ### Step 6: Git Sync (Add + Commit + Push)
 
@@ -156,6 +164,10 @@ open it. If the deploy output does not include the live URL, obtain it with
 `$BIN app play --no-browser`. Run `$BIN app play` to open the browser only when the user
 requested it or automatic opening is the host's established behavior. Otherwise, do not
 launch the browser or add a follow-up question.
+
+Before verifying published changes, follow the
+[live app refresh guidance](../../shared/shared-instructions.md#live-app-refresh-after-redeployment);
+the browser may initially display a cached version.
 
 If the user wants to verify the code before making it live, remind them they can preview without deploying:
 

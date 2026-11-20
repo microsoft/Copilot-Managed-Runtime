@@ -32,6 +32,13 @@ This skill scaffolds a new Microsoft App end-to-end using `@microsoft/cmr-cli` (
 
 Check for `memory-bank.md` per [shared-instructions.md](../../shared/shared-instructions.md). If found, infer whether to resume or create a new app from the request: resume when it refers to the existing app or incomplete work; create a new sibling project when it clearly describes a different app. State the choice and continue. Ask only when the request genuinely fits both paths and choosing incorrectly could overwrite or modify existing work.
 
+**Existing-code onboarding is not scaffolding.** If the user wants to bring an
+existing web app, cloned sample or exported project to Copilot Managed Runtime
+and it has no CMR configuration, invoke [/init-app](../init-app/SKILL.md) instead.
+Use `ms app init` with the skill's native Git guidance in that app's root; do not use `ms app create`,
+change repository mode, or create a sibling/child template as a workaround.
+The directory-selection rules below apply only when the user wants a **new app**.
+
 ### Step 2: Validate Prerequisites
 
 Run prerequisite checks **first** — no point gathering requirements if the environment isn't ready. Full details in [prerequisites-reference.md](./references/prerequisites-reference.md).
@@ -39,12 +46,12 @@ Run prerequisite checks **first** — no point gathering requirements if the env
 The commands below are shown in bash syntax. If you are running PowerShell on Windows, use the equivalents described in [shared-instructions.md](../../shared/shared-instructions.md#shell-compatibility) and the PowerShell example in [prerequisites-reference.md](./references/prerequisites-reference.md) instead of copying the bash snippets literally.
 
 ```bash
-node --version                                                    # Must be v22+
+node --version                                                    # Must be 24.11.0+
 git --version                                                     # Required (used by `ms app create` to init the repo)
 ms --version 2>/dev/null  # Probe the bin name
 ```
 
-- **Missing Node.js or below v22**: Report "Node.js 22+ is required. Install from https://nodejs.org/ or switch with `nvm use 22`." STOP.
+- **Missing Node.js or below 24.11.0**: Report "Node.js 24.11.0+ is required. Install from https://nodejs.org/ or switch with `nvm use 24` and verify the patch version." STOP.
 - **Missing Git**: Report "Git is required — `ms app create` initializes a repo. Install from https://git-scm.com/." STOP.
 - **Missing `ms`**: proceed to the global install block below. Confirm with the user before running `npm install -g`.
 - **One of them resolves**: record which binary name resolved (`$BIN`); use it in every subsequent step.
@@ -312,7 +319,7 @@ Write `memory-bank.md` at `$PROJECT_ROOT/memory-bank.md` per [memory-bank.md](..
 
 ```bash
 # Step 2: Prerequisites
-node --version                       # → v22.4.0
+node --version                       # → v24.11.0
 git --version                        # → 2.45.0
 ms --version                         # → 0.3.x
 

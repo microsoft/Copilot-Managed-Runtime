@@ -8,10 +8,10 @@ Build and run a Microsoft App using just your coding copilot. No prior Copilot M
 
 You need two tools installed before starting:
 
-**Node.js v22 or higher**
+**Node.js 24.11.0 or higher**
 Download from [nodejs.org](https://nodejs.org). After installing, verify:
 ```
-node --version   # should print v22.x.x or higher
+node --version   # should print v24.11.0 or higher
 ```
 
 **Git**
@@ -52,6 +52,22 @@ Your copilot will:
 If the folder is not empty, the skill will create the app in an inferred subfolder and tell you which folder it selected. If you run it from inside an existing Microsoft App, it creates the new app alongside that app instead of nested inside it.
 
 Nothing deploys to the cloud at this point — local dev only.
+
+### Already Have an App?
+
+Open the existing web app's root instead of an empty folder and run:
+
+```
+/init-app
+```
+
+This registers your existing code with `ms app init`, configures a
+platform-managed Git repository, verifies integration and the build, and starts
+local development without replacing your app with a template. It asks for approval
+before changing an existing `origin` and uses `--repo native` only for approved
+native rebinding. This workflow requires Node.js **24.11.0+**,
+Git **2.27.0+** and Git Credential Manager. It does not deploy.
+If the app already has CMR configuration, use `/dev` or `/deploy` instead.
 
 ---
 
@@ -101,7 +117,7 @@ After deployment, it returns the live URL without asking whether to open it.
 
 ### Resuming a Session
 
-After the first `ms app create`, the project folder gets a `memory-bank.md`. Open a new copilot session in the same folder and your copilot reads it to pick up where you left off (including which environment + cluster).
+After `/create-app` or `/init-app`, the project folder gets a `memory-bank.md`. Open a new copilot session in the same folder and your copilot reads it to pick up where you left off (including which environment + cluster).
 
 ### Troubleshooting
 
@@ -110,7 +126,7 @@ After the first `ms app create`, the project folder gets a `memory-bank.md`. Ope
 | `ms` command not found after install        | Verify `npm config get prefix` directory's `bin` is on PATH. On Windows that's `%APPDATA%\npm`.                           |
 | First `ms app create` fails with `Authentication failed for '...d.environment.api...'` | Git Credential Manager hasn't done the interactive flow yet. Your copilot will walk you through the recovery automatically. |
 | Build errors                                                  | Run `npm install` in the project folder, then retry.                                                                       |
-| Node.js version error                                         | Run `node --version` — must be v22+. Upgrade if needed.                                                                    |
+| Node.js version error                                         | Run `node --version` — must be 24.11.0+. Upgrade if needed.                                                                |
 
 ### Telemetry
 
