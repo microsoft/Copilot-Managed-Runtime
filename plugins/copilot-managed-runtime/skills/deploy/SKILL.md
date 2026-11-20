@@ -106,7 +106,7 @@ Failure handling per [shared-instructions.md](../../shared/shared-instructions.m
 - Module not found: `npm install` and retry once.
 - Other non-zero exit: report verbatim, STOP.
 
-Verify the build output directory (`./dist` by default, or whatever `--build-path` resolved to during `ms app create`) is populated before continuing.
+Verify the build output directory (`./dist` by default, or the app's configured `buildPath`) is populated before continuing.
 
 ### Step 6: Git Sync (Add + Commit + Push)
 

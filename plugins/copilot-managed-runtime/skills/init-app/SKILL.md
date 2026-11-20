@@ -58,10 +58,11 @@ installation based on a single `git credential-manager --version` probe.
 
 ### Step 3: Inspect the App
 
-Infer the display name and build settings from existing source, `package.json`,
+Infer the display name from existing source, `package.json`,
 lockfiles and framework configuration. Preserve the UI, scripts, package manager
 and business logic. Inspect Git root, branch, status and remotes, including hidden
-entries. Ask only when the app root or a required setting remains ambiguous.
+entries. Ask only when the app root remains ambiguous or progress requires
+information that cannot be discovered or safely inferred.
 For an app inside a parent repository or linked worktree, agree on a standalone
 copy before init rather than nesting repositories or changing shared remotes.
 
@@ -73,8 +74,9 @@ bindings instead of assuming registration migrates them.
 ### Step 4: Plan
 
 Follow the [planning policy](../../shared/planning-policy.md). Present one plan:
-existing app root/name, build command/output/HTML entry point, local dev URL,
-native Git setup, necessary integration changes, build verification and local dev.
+existing app root/name, native Git setup, necessary integration changes, build
+verification and local dev. Use the CLI's build/local defaults unless the
+existing app needs an override; do not ask for optional settings separately.
 Include a `/deploy` handoff only if requested. Do not redesign the app.
 
 Native platform-managed Git is the recommended path. When no `origin` is detected,
@@ -102,16 +104,17 @@ rather than attempting an environment workaround.
 
 ### Step 7: Initialize
 
-From the **existing app root**, run with the inspected values, quoted for the
+From the **existing app root**, run with the display name, quoted for the
 active shell. Do not create a child/sibling template or substitute `ms app create`.
 
 ```bash
-ms app init --display-name "<name>" --non-interactive --build-command "<build-command>" --build-path "<output-directory>" --build-entry-point "<entry-html>" --local-app-url "<local-dev-url>"
+ms app init --display-name "<name>"
 ```
 
 For approved native rebinding, first preserve the old remote as agreed and append
 `--repo native`. Otherwise omit `--repo` when no `origin` is detected.
-The HTML entry point is relative to the output directory.
+Let the CLI supply build/local defaults. Add optional build/local overrides only
+when requested or needed for the existing app, not to fill every available flag.
 
 Read `ms.config.json` back and verify app/environment IDs, `repoType: "native"`,
 repository ID and build/dev settings. Verify actual Git root, branch, `origin`
