@@ -1,6 +1,6 @@
 ---
 name: troubleshoot
-description: Diagnoses Copilot Managed Runtime app, ms CLI and agent-guidance failures, verifies safe fixes and prepares reproduction evidence before reporting.
+description: Diagnoses failures only in Copilot Managed Runtime apps, @microsoft/cmr-cli or this plugin's instructions. Not general troubleshooting for other products, ms-named tools or agents.
 allowed-tools: Read Grep Glob Bash WebFetch AskUserQuestion Edit Write
 ---
 
@@ -8,8 +8,12 @@ allowed-tools: Read Grep Glob Bash WebFetch AskUserQuestion Edit Write
 
 # Troubleshoot
 
-**CLI baseline:** `@microsoft/cmr-cli` **1.0.0** for existing command evidence;
-no new diagnostic command or SDK capability is required.
+Use only when the failure relates to Copilot Managed Runtime, its
+`@microsoft/cmr-cli`, or this plugin's instructions. Installation alone, an `ms`
+command name, or a generic agent error does not establish relevance. If unclear,
+ask which product is affected before collecting diagnostics. For unrelated
+products, leave this workflow without running CMR checks or recommending our
+issue repository; use the product's normal troubleshooting path.
 
 ## 1. Preserve relevant evidence
 

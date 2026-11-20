@@ -90,8 +90,10 @@ The memory bank persists context across sessions. Every skill reads it at start 
 
 ## Troubleshooting and Issue Reporting
 
-For unresolved failures, use [/troubleshoot](../skills/troubleshoot/SKILL.md);
-for user-directed escalation, use [/report-issue](../skills/report-issue/SKILL.md).
+Only for Copilot Managed Runtime, `@microsoft/cmr-cli` or this plugin's instructions,
+use [/troubleshoot](../skills/troubleshoot/SKILL.md) for unresolved failures and
+[/report-issue](../skills/report-issue/SKILL.md) for user-directed escalation.
+Do not route unrelated product issues through these skills merely because the plugin is installed.
 Support workflows reuse available context without mandatory memory-bank reads,
 updates or diagnostic-file creation. Defer routine plugin/CLI freshness gates
 during evidence collection and report-only work; preserve original versions and

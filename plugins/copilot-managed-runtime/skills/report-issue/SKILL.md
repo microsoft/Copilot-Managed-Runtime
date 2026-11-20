@@ -1,6 +1,6 @@
 ---
 name: report-issue
-description: Drafts and files a public Copilot Managed Runtime issue using diagnosis evidence, minimal reproduction steps, privacy review and explicit approval.
+description: Reports issues only for Copilot Managed Runtime, @microsoft/cmr-cli or this plugin's app-generation instructions. Not a general-purpose product issue reporter.
 allowed-tools: Read Grep Glob Bash WebFetch AskUserQuestion Write
 ---
 
@@ -8,8 +8,11 @@ allowed-tools: Read Grep Glob Bash WebFetch AskUserQuestion Write
 
 # Report Issue
 
-No CLI command or SDK capability is required to draft a report. Existing CLI
-evidence uses the plugin's `@microsoft/cmr-cli` **1.0.0** baseline.
+Use only for Copilot Managed Runtime, `@microsoft/cmr-cli`, or this plugin's
+instructions. Installation alone does not establish relevance. If the affected
+product is unclear, ask before collecting evidence or selecting a repository.
+For unrelated products, leave this workflow and use their normal support path;
+do not apply CMR checks or route their reports to this repository.
 
 ## 1. Reuse evidence and confirm the destination
 
