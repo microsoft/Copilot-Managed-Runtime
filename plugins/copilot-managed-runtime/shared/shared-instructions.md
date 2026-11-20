@@ -48,6 +48,15 @@ migrate SDKs, framework configuration, connectors or backends.
 
 ---
 
+## Live App Refresh After Redeployment
+
+After redeployment, the live app may initially show a cached version. Wait for
+the update notification and use its refresh action before verifying changes.
+Old content alone does not indicate deployment failure; do not redeploy just
+to refresh it.
+
+---
+
 ## Safety Guardrails
 
 ### MUST (required before acting)

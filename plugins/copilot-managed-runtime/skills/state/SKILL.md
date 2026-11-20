@@ -340,6 +340,7 @@ app against a **separate Preview store**: same collections, different records. T
 validation, and schema/index changes there before `ms app deploy`. Preview only engages when the
 previewed commit differs from the deployed one. After deploying, click **Refresh** on the app's
 *New version available* banner before testing schema changes; a plain reload keeps the old schema.
+See the shared [live app refresh guidance](../../shared/shared-instructions.md#live-app-refresh-after-redeployment).
 
 To purge Preview records (with the user's explicit approval, see rules), run
 `ms project state clear --force --json --non-interactive` in the app folder. `isComplete: false` is

@@ -165,6 +165,10 @@ open it. If the deploy output does not include the live URL, obtain it with
 requested it or automatic opening is the host's established behavior. Otherwise, do not
 launch the browser or add a follow-up question.
 
+Before verifying published changes, follow the
+[live app refresh guidance](../../shared/shared-instructions.md#live-app-refresh-after-redeployment);
+the browser may initially display a cached version.
+
 If the user wants to verify the code before making it live, remind them they can preview without deploying:
 
 ```bash
