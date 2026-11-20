@@ -16,30 +16,12 @@ Apps on Copilot Managed Runtime run locally against the App Player with hot relo
 ### Diagnose before reporting
 
 Use `/troubleshoot` for CLI, app load/runtime, build or agent-guidance failures.
-It compares actual actions with applicable instructions, checks relevant newer
-plugin guidance, explains the likely cause and verifies an approved targeted
-fix. Installed, session-loaded and app-generation versions remain separate;
-historical provenance is unknown unless evidence exists. It does not inspect
-hidden reasoning, automatically update/restart, deploy, or recreate resources.
-
-When escalation is appropriate, `/report-issue` reuses the diagnosis and minimal
-reproduction, including whether it is agent-verified, customer-reported or
-unverified. The agent uses a structured Markdown diagnosis template and an
-explicit privacy-review checklist to prepare the public draft. Private
-session/request IDs stay separate. There is no automated sanitization or
-guarantee of anonymity; agent and user review are required.
-The exact public title/body and destination must be
-approved before filing in
+It checks applicable guidance, explains the likely cause and verifies a safe fix.
+For escalation, `/report-issue` reuses evidence and minimal reproduction steps,
+reviews privacy, and asks approval of the exact public draft before filing in
 [microsoft/Copilot-Managed-Runtime](https://github.com/microsoft/Copilot-Managed-Runtime).
-Intermittent failures and instruction gaps remain reportable, even after a
-workaround succeeds.
-
-Collection and artifact creation require consent. Full transcripts, raw HARs,
-memory banks and proprietary code are not public attachments by default.
-This release uses existing CLI output and available host/UI evidence; it does
-not introduce a CLI diagnostic-export command or App Player support button.
-See the [support policy](shared/support-policy.md) and
-[diagnosis record](skills/troubleshoot/references/diagnosis-record.md).
+These are instruction-only workflows: unavailable provenance stays unknown,
+private IDs are excluded, and there is no automated sanitization guarantee.
 
 ### App backend database
 

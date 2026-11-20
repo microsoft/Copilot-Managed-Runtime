@@ -51,22 +51,8 @@ If anything in Steps 2-4 fails (network error, file not found, malformed JSON), 
 
 ## Diagnostic Version Comparison
 
-For `/troubleshoot`, bypass the once-daily skip and perform a fresh comparison.
-Do not update the daily timestamp or install anything as part of diagnosis.
-
-1. Preserve the installed version from the canonical manifest and any available
-   session-loaded/app-generation provenance before recommending changes. Mark
-   unavailable historical versions unknown; the current manifest does not prove
-   what an earlier session loaded.
-2. Fetch the marketplace above. If a newer version exists, inspect the relevant
-   changed workflow/reference at an identifiable published commit/release and
-   compare it with the actual failing action and local instructions.
-3. Record the source/revision, affected/fixed versions if verified, and why the
-   change applies. A higher version or an unrelated public-doc change is not
-   evidence of a fix. Do not promise an update resolves the issue without it.
-4. Explain any observed installed-versus-loaded mismatch. Recommend the host's
-   supported update/reload/new-session procedure with approval; do not restart,
-   update dependencies or claim a successful reload automatically.
-5. If comparison fails, state which evidence is unavailable and continue with
-   local diagnosis. Unlike the routine daily check, diagnostic failures must be
-   visible and recorded; never report "up to date" after a failed fetch.
+For support workflows, skip the routine daily check/timestamp write. When stale
+guidance or compatibility is plausible, follow
+[/troubleshoot](../skills/troubleshoot/SKILL.md#2-identify-the-likely-cause)
+for a fresh, evidence-based comparison regardless of the daily cache. A failed
+diagnostic lookup must be disclosed, not interpreted as "up to date."
