@@ -13,6 +13,32 @@ Apps on Copilot Managed Runtime run locally against the App Player with hot relo
 | App backend database | `/add-backend` |
 | Data sources     | `/add-data-source`, `/add-dataverse`, `/add-sharepoint`, `/add-excel`, `/add-office365`, `/add-office365-users`, `/add-teams`, `/add-onedrive`, `/add-azuredevops`, `/add-mcscopilot`, `/add-workiq`, `/list-connectors` |
 
+### Diagnose before reporting
+
+Use `/troubleshoot` for CLI, app load/runtime, build or agent-guidance failures.
+It compares actual actions with applicable instructions, checks relevant newer
+plugin guidance, explains the likely cause and verifies an approved targeted
+fix. Installed, session-loaded and app-generation versions remain separate;
+historical provenance is unknown unless evidence exists. It does not inspect
+hidden reasoning, automatically update/restart, deploy, or recreate resources.
+
+When escalation is appropriate, `/report-issue` reuses the diagnosis and minimal
+reproduction, including whether it is agent-verified, customer-reported or
+unverified. A deterministic Node.js exporter validates the closed record shape,
+omits private session/request IDs and redacts common sensitive patterns. Manual
+review is still required. The exact public title/body and destination must be
+approved before filing in
+[microsoft/Copilot-Managed-Runtime](https://github.com/microsoft/Copilot-Managed-Runtime).
+Intermittent failures and instruction gaps remain reportable, even after a
+workaround succeeds.
+
+Collection and artifact creation require consent. Full transcripts, raw HARs,
+memory banks and proprietary code are not public attachments by default.
+This release uses existing CLI output and available host/UI evidence; it does
+not introduce a CLI diagnostic-export command or App Player support button.
+See the [support policy](shared/support-policy.md) and
+[diagnosis record](skills/troubleshoot/references/diagnosis-record.md).
+
 ### App backend database
 
 Use `/add-backend` only for an explicitly requested app backend database with
