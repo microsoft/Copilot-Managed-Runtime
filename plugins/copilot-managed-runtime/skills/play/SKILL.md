@@ -12,7 +12,7 @@ Opens a Microsoft App in the browser by fetching its cloud play URL and launchin
 
 | Mode | Command | What opens |
 | ---- | ------- | ---------- |
-| `live` (default) | `ms app play` | The most recently deployed version. A snapshot — does not update until `ms app deploy` is run again. |
+| `live` (default) | `ms app play` | The published app; cached content may appear first after redeployment until the update notification's refresh action is used. |
 | `preview` (main) | `ms app play --mode preview` | Built from the `main` branch on demand — always reflects the latest pushed code, even without a deploy. |
 | `preview` (commit) | `ms app play --mode preview --commit <sha>` | App as of a specific commit SHA — useful for code review or regression testing. |
 
@@ -94,6 +94,10 @@ Live URL for 'my-app':
 
 ⚠ Live does not auto-update. Run /deploy to publish new code to the live URL.
 ```
+
+If the app was already redeployed, follow the
+[live app refresh guidance](../../shared/shared-instructions.md#live-app-refresh-after-redeployment)
+instead of deploying again because old content is visible.
 
 For preview:
 

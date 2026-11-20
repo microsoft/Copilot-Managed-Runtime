@@ -31,6 +31,32 @@ Remove an inherited report so the CLI can detect the agent.
 
 ---
 
+## New App vs Existing App
+
+- **New app from a template:** use `/create-app` and `ms app create`.
+- **Existing web app, sample or exported code without CMR configuration:** use
+  [/init-app](../skills/init-app/SKILL.md) and `ms app init` with native Git in the
+  existing app root. Preserve the application; do not scaffold a replacement or
+  switch repository mode as a workaround.
+- **Already registered CMR workspace:** use `/dev` or `/deploy` as requested.
+  Missing `memory-bank.md` is not a reason to register the app again.
+
+Native platform-managed Git remains the recommended onboarding path. Explain
+and approve any existing-remote changes before init. Omit `--repo` when no `origin`
+is detected; use `--repo native` for approved native rebinding. Registration alone does not
+migrate SDKs, framework configuration, connectors or backends.
+
+---
+
+## Live App Refresh After Redeployment
+
+After redeployment, the live app may initially show a cached version. Wait for
+the update notification and use its refresh action before verifying changes.
+Old content alone does not indicate deployment failure; do not redeploy just
+to refresh it.
+
+---
+
 ## Safety Guardrails
 
 ### MUST (required before acting)
@@ -48,7 +74,7 @@ Remove an inherited report so the CLI can detect the agent.
 
 - MUST NOT run `ms app deploy` if `npm run build` has not succeeded in the current session.
 - MUST NOT run `ms app deploy` from uncommitted or unpushed local changes.
-- MUST NOT install `@microsoft/cmr-cli` per-workspace. The `@microsoft/cmr-cli` is installed globally so the `ms` binary is on PATH; the workspace stays clean.
+- MUST NOT manually install `@microsoft/cmr-cli` per-workspace. Install globally so `ms` is on PATH; preserve the project-local pin the CLI writes automatically during create/init and restore dependencies normally.
 - MUST NOT edit generated codegen output in `generated/` unless the step explicitly calls for it.
 - MUST NOT install packages globally without user confirmation (see exception above for the documented setup flow).
 - MUST NOT remove `sharedConnectionId` from `ms.config.json` to get past an `allowedActions` validation failure. That field records how the connection was actually created; deleting it misrepresents the binding. Declare the actions instead.
@@ -320,7 +346,7 @@ may block `blob:` URLs. See `/add-office365-users` for a complete chunk-safe con
 
 ## CLI Toolchain
 
-The CLI is `@microsoft/cmr-cli` (binary `ms`), installed globally from the public npm registry. The `/create-app` skill handles install + binary-name probing.
+The CLI is `@microsoft/cmr-cli` (binary `ms`), installed globally from the public npm registry. The `/create-app` and `/init-app` skills handle install + binary-name probing. Do not manually add a workspace CLI dependency; preserve the project-local pin written by the CLI itself during create/init.
 
 **Binary name:** use `ms`:
 

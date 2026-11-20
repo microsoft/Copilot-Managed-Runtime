@@ -4,15 +4,15 @@
 
 | Tool                  | Minimum Version | Check Command                                       | Install / Notes                                                              |
 | --------------------- | --------------- | --------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Node.js               | **v22+**        | `node --version`                                    | https://nodejs.org/                                                          |
-| Git                   | Any 2.x         | `git --version`                                     | https://git-scm.com/ — required (`ms app create` initializes a repo).        |
-| Git Credential Manager | Bundled with Git for Windows | `git credential-manager --version`     | First `ms app create` triggers an interactive browser flow against the remote git endpoint. See [troubleshooting.md](./troubleshooting.md#first-run-git-credential-manager-trap). |
+| Node.js               | **24.11.0+**    | `node --version`                                    | https://nodejs.org/ — honor stricter installed package requirements.         |
+| Git                   | **2.27.0+**     | `git --version`                                     | https://git-scm.com/ — required for native Git setup.                        |
+| Git Credential Manager | Bundled with Git for Windows | CLI native-flow preflight | Accepts `manager` or `manager-core` installations and verifies the configured helper. See [troubleshooting.md](./troubleshooting.md#first-run-git-credential-manager-trap). |
 | `@microsoft/cmr-cli` | `@latest` tag      | `ms --version` | Install globally only — see below. |
 
 ## Required Account
 
 - A Microsoft work/school account with access to a Copilot Managed Runtime-enabled tenant.
-- `ms app create` resolves an environment automatically — you do not need to know or provide one. (Advanced users who already have a specific environment ID can pass it via `--environment-id`.)
+- `ms app create` and `ms app init` resolve an environment automatically — you do not need to know or provide one. (Advanced users who already have a specific environment ID can pass it via `--environment-id`.)
 
 ## Installing `@microsoft/cmr-cli`
 
