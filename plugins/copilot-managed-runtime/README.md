@@ -24,9 +24,11 @@ hidden reasoning, automatically update/restart, deploy, or recreate resources.
 
 When escalation is appropriate, `/report-issue` reuses the diagnosis and minimal
 reproduction, including whether it is agent-verified, customer-reported or
-unverified. A deterministic Node.js exporter validates the closed record shape,
-omits private session/request IDs and redacts common sensitive patterns. Manual
-review is still required. The exact public title/body and destination must be
+unverified. The agent uses a structured Markdown diagnosis template and an
+explicit privacy-review checklist to prepare the public draft. Private
+session/request IDs stay separate. There is no automated sanitization or
+guarantee of anonymity; agent and user review are required.
+The exact public title/body and destination must be
 approved before filing in
 [microsoft/Copilot-Managed-Runtime](https://github.com/microsoft/Copilot-Managed-Runtime).
 Intermittent failures and instruction gaps remain reportable, even after a

@@ -57,7 +57,7 @@ This plugin uses a memory bank (`memory-bank.md`) to persist state across sessio
 | `/delete-app`  | `ms app delete` (idempotent).                    |
 | `/list-apps`   | `ms app list` / `ms app show`.                   |
 | `/troubleshoot` | Evidence-based diagnosis, safe recovery and minimal reproduction. |
-| `/report-issue` | Validated public issue draft and approval-gated reporting. |
+| `/report-issue` | Privacy-reviewed public issue draft and approval-gated reporting. |
 
 ### Stage 3: data sources
 
@@ -154,8 +154,6 @@ After modifying this plugin:
 8. Run `python scripts/validate_plugin_skills.py`.
 9. Run `python -m unittest discover -s scripts -p "*_test.py"`.
 10. Run `node --test scripts/plugin-hooks.test.mjs`.
-    Also run `node --test scripts/support-report.test.mjs` for the diagnostic
-    record validation, public exporter and privacy boundary.
 11. Follow the client test matrix in [README.md](README.md) before claiming runtime compatibility.
 12. Verify any new `allowed-tools` entries are minimal — request only what the skill needs.
 
@@ -176,10 +174,8 @@ Keep both hook payload contracts when editing a script.
 
 The canonical manifest follows [Agent Plugins 1.0.0](https://agent-plugins.org/specification).
 That version requires root `plugin.json`, not the older `.plugin/plugin.json` layout.
-The generic `PR pipeline` workflow in `.github/workflows/pr.yml` contains plugin
-compatibility and support-report export jobs.
-These check manifests, component compatibility, resource links, skill validity,
-hooks and the public diagnostic exporter on Windows and Ubuntu.
+The generic `PR pipeline` workflow in `.github/workflows/pr.yml` contains one job: plugin compatibility.
+This job checks manifests, component compatibility, resource links, skill validity, and hooks on Windows and Ubuntu.
 The Python dependency is the Agent Skills reference validator, pinned to a Git commit.
 Add future PR checks as separate jobs in this workflow.
 Client installation, updates, shared-resource resolution, and hook behavior still need host-level checks before claiming support for a new client.

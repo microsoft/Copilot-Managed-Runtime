@@ -1,80 +1,67 @@
-# Diagnosis Record (schema version 1)
+# Diagnosis Record
 
-The exporter enforces a closed record shape: unknown fields, invalid enums,
-oversized input and missing required evidence are errors, not silently dropped
-successes. All fields below are required except `privateEvidence`. Arrays may be
-empty only for `provenance` and `attempts`.
+Use this structured Markdown template in the conversation or a user-approved
+artifact. It is a checklist for the agent, not a machine-validated schema.
+Use curated factual summaries, not raw logs/configuration dumps. Mark missing
+information unknown; preserve the original failure before attempting recovery.
 
-```json
-{
-  "schemaVersion": 1,
-  "symptom": "App fails to load after local dev starts.",
-  "category": "unknown",
-  "versions": {
-    "installedPlugin": "unknown",
-    "sessionLoadedPlugin": "unknown",
-    "generationPlugin": "unknown",
-    "cli": "unknown",
-    "sdk": "unknown",
-    "runtime": "unknown",
-    "node": "unknown"
-  },
-  "provenance": [
-    {
-      "subject": "session-loaded instructions",
-      "status": "unknown",
-      "detail": "The host does not expose the resources loaded by the earlier session."
-    }
-  ],
-  "evidence": [
-    "Customer reported a blank page; no console or request error is available yet."
-  ],
-  "attempts": [],
-  "reproduction": {
-    "prerequisites": ["Existing app; authenticated local development session."],
-    "steps": ["Run ms app dev.", "Open the printed App Player URL."],
-    "expected": "The app renders.",
-    "actual": "Customer reported a blank page.",
-    "frequency": "unknown",
-    "verification": "customer-reported"
-  },
-  "recommendation": "Collect the relevant console error before classifying the cause.",
-  "privateEvidence": {
-    "agentSessionId": "",
-    "cliExecutionId": "",
-    "runtimeSessionId": "",
-    "backendRequestId": ""
-  }
-}
+```markdown
+# Support Diagnosis
+
+## Symptom
+[What failed, where, and when; no personal/customer identifiers.]
+
+## Likely cause
+Category: [agent-action / outdated-guidance / configuration / instruction-gap / product-bug / unknown]
+Supporting evidence: [Observed actions and applicable instructions.]
+Uncertainty or coexisting causes: [What is inferred or still unknown.]
+
+## Versions and provenance
+| Component | Version | Evidence status | Source |
+| --- | --- | --- | --- |
+| Installed plugin | unknown | unknown | unknown |
+| Session-loaded plugin | unknown | unknown | unknown |
+| App-generation plugin | unknown | unknown | unknown |
+| CLI | unknown | unknown | unknown |
+| SDK | unknown | unknown | unknown |
+| Runtime | unknown | unknown | unknown |
+| Node.js | unknown | unknown | unknown |
+
+## Relevant evidence
+[Curated error codes, safe command summaries, timestamps, and instruction sources.]
+
+## Attempted fixes
+[Action, observed result, and before/after versions if changed; or none.]
+
+## Minimal reproduction
+Prerequisites: [Relevant configuration/dependencies and placeholder inputs.]
+1. [Command or UI action.]
+2. [Command or UI action.]
+
+Expected: [Expected result.]
+Actual: [Observed result.]
+Frequency: [consistent / intermittent / once / unknown]
+Verification: [agent-verified / customer-reported / proposed / not-reproduced]
+Limitations: [Missing dependencies, unexecuted steps, or untested synthetic data.]
+
+## Outcome
+[Verified recovery, remaining blocker, or suggested report with supporting evidence.]
 ```
 
-- `category`: `agent-action`, `outdated-guidance`, `configuration`,
-  `instruction-gap`, `product-bug`, or `unknown`.
-- `versions`: exact observed version strings (maximum 80 characters), otherwise
-  `unknown`. Put evidence/status for each known value in `provenance`; reading the
-  installed manifest cannot establish session-loaded/generation versions.
-- `provenance`: up to 30 entries with `subject`, `status` (`observed`,
-  `agent-reported`, `unknown`) and `detail`.
-- `evidence`: 1-30 curated factual summaries, not raw output, payloads or code.
-- `attempts`: up to 10 entries containing `action` and `result`.
-- `reproduction`: 1-30 `prerequisites` and `steps`, `expected`, `actual`,
-  `frequency` (`consistent`, `intermittent`, `once`, `unknown`) and `verification`
-  (`agent-verified`, `customer-reported`, `proposed`, `not-reproduced`).
-- `privateEvidence`: optional closed object with the four distinct ID fields
-  above; omit unavailable fields or use an empty string. Never put their values
-  in public text. No raw logs, transcript or HAR field is supported.
-- All other strings: non-empty, maximum 2,000 characters.
-- Input: at most 128 KiB UTF-8 JSON. Output is Markdown on stdout; the exporter
-  does not write, upload, file an issue, execute reproduction steps or read the
-  machine's environment.
+For versions and instruction sources, use `observed`, `agent-reported`, or
+`unknown`. Reading the installed manifest cannot establish what an earlier
+session loaded or what generated the app. Add relevant CLI/client/framework
+versions only with collection consent; do not fabricate historical provenance.
 
-Only use curated, user-approved text. Unknown fields are rejected to avoid an
-accidental log/config dump. The exporter omits private IDs, scrubs common
-credential/identifier/path/URL patterns, and quotes free text as inert Markdown.
-Manual review is still required for customer names, business data, proprietary
-content, unusual secrets and sensitive reproduction values.
+Keep CLI execution, agent-session, runtime-session and backend-request IDs in
+separately approved private notes, not this template or public free text. Do not
+append raw logs, HARs, credentials, proprietary code or transcripts.
 
-The public output follows this repository's
+When reporting, transfer the reviewed evidence into the destination's live issue
+template rather than submitting this diagnosis as an attachment. The default is
+the repository's
 [bug report template](https://github.com/microsoft/Copilot-Managed-Runtime/blob/main/.github/ISSUE_TEMPLATE/bug_report.md).
-Check the live destination/template before filing; if it changed, preserve its
-sections and comments while transferring the already sanitized evidence.
+Preserve its headings, sections and HTML comments. Follow the
+[/report-issue privacy checklist](../../report-issue/SKILL.md#2-prepare-and-review-the-public-draft)
+and obtain approval of the exact public title/body. No automated sanitization
+or anonymity guarantee is provided.

@@ -57,14 +57,15 @@ must supply; do not replace them with fabricated working credentials or data.
 ## Public versus private
 
 Keep one diagnosis record following the
-[record contract](../skills/troubleshoot/references/diagnosis-record.md).
+[Markdown template](../skills/troubleshoot/references/diagnosis-record.md).
 Only create it in a user-approved location outside tracked source by default.
 It is not the project memory bank; do not attach the memory bank wholesale.
 
-The [public exporter](../skills/report-issue/scripts/export-report.mjs) validates
-the record, omits private evidence, and redacts common sensitive patterns.
-Its allowlist and redaction are risk reduction, NOT a guarantee of anonymity.
-Review all free text, commands and reproduction steps before publishing.
+Prepare the public draft from curated evidence using the destination's issue
+template and the [/report-issue privacy checklist](../skills/report-issue/SKILL.md#2-prepare-and-review-the-public-draft).
+There is no automated sanitizer or schema validator. Agent and user review
+reduce risk but do not guarantee anonymity. Review all free text, commands,
+reproduction steps, Markdown links and attachments before publishing.
 Exclude credentials, cookies, authorization headers, account/tenant/app
 identifiers, user paths, customer payloads, proprietary code, full transcripts,
 and private URLs. Do not attach raw logs, HAR files or screenshots by default.
@@ -72,12 +73,13 @@ Prefer filtered request method/status/timestamp metadata. Richer evidence needs
 separate consent and manual review.
 
 CLI execution IDs, agent-session IDs, runtime-session IDs and backend-request
-IDs are distinct. Keep them under `privateEvidence`, never in public free text.
+IDs are distinct. Keep them in separately approved private notes, not the public
+draft or its diagnosis template.
 Share private evidence only through an established authenticated support channel
 with the user's approval; do not invent an upload endpoint or upload it to a
 public issue, gist or third party. Do not retain it longer than needed.
 
 Before filing, verify the destination and applicable issue template, show the
-exact sanitized title/body and any attachments, warn that the issue is public,
+exact privacy-reviewed title/body and any attachments, warn that the issue is public,
 and obtain explicit approval. Re-preview after edits. Never silently file,
 upload, or block user-directed reporting based solely on the classification.

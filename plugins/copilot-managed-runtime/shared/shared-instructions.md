@@ -100,8 +100,8 @@ verify it, and prepare minimal reproduction steps with explicit verification
 status. Do not automatically collect logs/environment details or file an issue.
 
 For user-approved escalation, follow
-[/report-issue](../skills/report-issue/SKILL.md). Reuse the diagnosis, validate and
-sanitize the public draft, and obtain approval of the exact content/destination.
+[/report-issue](../skills/report-issue/SKILL.md). Reuse the diagnosis, follow the
+privacy-review checklist, and obtain approval of the exact content/destination.
 Never publish the memory bank, raw transcripts, HARs or private IDs by default.
 
 ---
