@@ -81,4 +81,11 @@ expected/actual results, frequency, attempted fixes and reproduction status
 failures, distinguish a prompt that sometimes produces bad actions from commands
 that reliably fail. Prefer a minimal local example with safe placeholders; state
 missing dependencies and whether synthetic inputs were actually tested.
-Pass this evidence to [/report-issue](../report-issue/SKILL.md) without another interview.
+
+If the user wants a support handoff (for example, Teams), prepare a concise
+copyable summary of this evidence, likely cause/uncertainty and remaining blocker;
+no GitHub issue is required. Apply the linked privacy review even for internal
+chat. Keep IDs separate unless approved for the intended recipients; never include
+credentials or raw customer data. Prepare text only, not an automatic message.
+For GitHub reporting, pass the evidence to
+[/report-issue](../report-issue/SKILL.md) without another interview.
