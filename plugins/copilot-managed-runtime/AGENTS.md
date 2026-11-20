@@ -58,6 +58,8 @@ This plugin uses a memory bank (`memory-bank.md`) to persist state across sessio
 | `/share-link`  | `ms app share link create` / `list` / `revoke`.  |
 | `/delete-app`  | `ms app delete` (idempotent).                    |
 | `/list-apps`   | `ms app list` / `ms app show`.                   |
+| `/troubleshoot` | Evidence-based diagnosis, safe recovery and minimal reproduction. |
+| `/report-issue` | Privacy-reviewed public issue draft and approval-gated reporting. |
 
 ### Stage 3: data sources
 

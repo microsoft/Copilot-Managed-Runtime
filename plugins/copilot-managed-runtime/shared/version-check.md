@@ -48,3 +48,11 @@ Write today's date (YYYY-MM-DD) to `~/.copilot-managed-runtime-last-version-chec
 ## Error Handling
 
 If anything in Steps 2-4 fails (network error, file not found, malformed JSON), skip the check silently and continue with the skill. **Never block skill execution over a version check failure.**
+
+## Diagnostic Version Comparison
+
+For support workflows, skip the routine daily check/timestamp write. When stale
+guidance or compatibility is plausible, follow
+[/troubleshoot](../skills/troubleshoot/SKILL.md#2-identify-the-likely-cause)
+for a fresh, evidence-based comparison regardless of the daily cache. A failed
+diagnostic lookup must be disclosed, not interpreted as "up to date."

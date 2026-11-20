@@ -14,6 +14,16 @@ Apps on Copilot Managed Runtime run locally against the App Player with hot relo
 | App backend database | `/add-backend` |
 | Data sources     | `/add-data-source`, `/add-dataverse`, `/add-sharepoint`, `/add-excel`, `/add-office365`, `/add-office365-users`, `/add-teams`, `/add-onedrive`, `/add-azuredevops`, `/add-mcscopilot`, `/add-workiq`, `/list-connectors` |
 
+### Diagnose before reporting
+
+Use `/troubleshoot` for CLI, app load/runtime, build or agent-guidance failures.
+It checks applicable guidance, explains the likely cause and verifies a safe fix.
+For escalation, `/report-issue` reuses evidence and minimal reproduction steps,
+reviews privacy, and asks approval of the exact public draft before filing in
+[microsoft/Copilot-Managed-Runtime](https://github.com/microsoft/Copilot-Managed-Runtime).
+These are instruction-only workflows: unavailable provenance stays unknown,
+private IDs are excluded, and there is no automated sanitization guarantee.
+
 ### Bring an existing app
 
 Run `/init-app` from an existing web app, cloned sample or exported project's root.
